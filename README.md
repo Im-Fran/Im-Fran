@@ -7,23 +7,29 @@ I not consider myself as a 100/100 developer, I just started programming and, I 
 ### My Projects
 Wanna know more about my job? Here are some projects:
 - [``TheProgramSrc``](https://github.com/TheProgramSrc): This is my Minecraft Plugin Development Team
-- [``Helprof``](#): This project started like a homework and I wanted to continue and make it a brand new application for teachers, students, and schools!
-
-### Working on/at
- - Working on my Minecraft Plugins ([``TheProgramSrc``](https://github.com/TheProgramSrc))
- - Working at [Songoda](https://songoda.com) as Marketplace Manager and Website Developer.
- - Working as CEO of Helprof (And waiting until I can register it as a company :D )
+- Working at [Songoda](https://songoda.com) as Director of Marketplace Operations.
+ <!--
+- Working as CEO of Helprof (Still working on it) 
+-->
 
 ### Languages/Frameworks/APIs that I use
-- SpigotAPI (Minecraft Plugin Development) > 2 Years of experience
-- BungeeCord (Minecraft Proxy Plugin Development) > 8 Months of experience
-- Java > 2 Years of experience
-- Kotlin > 1 Month of experience
-- PHP > 8 Months of experience
-- VueJS > 3 Months of experience
-- Laravel > 6 Months of experience
-- Inertia > 1 Month of experience
+- [SpigotAPI](https://spigotmc.org) (Minecraft Plugin Development) > 2 Years of experience
+- [BungeeCord](https://spigotmc.org) (Minecraft Proxy Plugin Development) > 8 Months of experience
+- [Java](https://java.com) > 2 Years of experience
+- [Kotlin](https://kotlinlang.org) > 4 Month of experience
+- [PHP](https://php.net) > 11 Months of experience
+- [VueJS](https://vuejs.org) > 6 Months of experience
+- [Laravel](https://laravel.com) > 9 Months of experience
+- [InertiaJS](https://inertiajs.com) > 4 Month of experience
 - Swift > 2 Weeks of experience (Abandoned because currently I don't develop iOS Apps :D )
+
+### Wanna talk?
+If you want to talk with me or other programmers you can join my [discord](https://go.theprogramsrc.xyz/discord) or send me an [email](mailto:fran@theprogramscrc.xyz) and I'll try to answer ASAP.
+
+### Some of my social networks
+- [Twitter](https://twitter.com/Im_Fran_)
+- [LinkedIn](https://www.linkedin.com/in/franciscosolismat)
+- [Instagram](https://instagram.com/imjustfran_)
 
 <!--
 **Im-Fran/Im-Fran** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
