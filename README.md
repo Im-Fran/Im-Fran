@@ -27,6 +27,14 @@ And these are the projects that I've worked on or created:
 ### Personal Information
 I was born in Santiago, Chile. My native language is Spanish but as you may already know I also know some English. I go by the pronouns He/Him. I love drinking coffee and coding. I want to write "I'm currently learning..." but I can't really write a specific thing. I always learn something new everyday but I'm mainly learning about website development 😛
 
+### Current Projects I'm working on
+- [TheProgramSrc Website](https://theprogramsrc.xyz)
+- [TheProgramSrc Web API](https://api-v2.theprogramsrc.xyz/)
+- [SuperAuth Plugin](https://theprogramsrc.xyz/products/1)
+- [SuperManager Plugin](#) (It doesn't have a page yet, but I'm working on one for it ;D)
+- [Songoda.com](https://songoda.com/)
+- [ServerJars.com](https://serverjars.com/)
+
 
 <!--
 **Im-Fran/Im-Fran** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
