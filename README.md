@@ -2,7 +2,9 @@
 I not consider myself as a 100/100 developer, I just started programming and, I don't really know how I know this much to create programs, it's like if I want to learn a new programming language I just check some projects on GitHub and search for examples in Youtube and that's all what I need to start programming. I never read the docs until it's too late, I always start coding some stuff like, testing projects and things like that and then when I think "I don't know how to do this" I search in the docs. I've been through many programming languages, frameworks and APIs, but I personally think that my main work is Website Developer and Java Software Developer.
 
 ### My Github Stats
-[![Fran's github stats](https://github-readme-stats.vercel.app/api?username=Im-Fran&show_icons=true&theme=dark)](https://github.com/anuraghazra/github-readme-stats)
+[![Fran's github stats](https://github-readme-stats.vercel.app/api?username=Im-Fran&show_icons=true&theme=dark&count_private=true)](https://github.com/anuraghazra/github-readme-stats)
+
+[![Fran's github stats](https://github-readme-stats.vercel.app/api/top-langs/?username=Im-Fran&theme=dark&langs_count=8)](https://github.com/anuraghazra/github-readme-stats)
 
 ### My skills
 I've used a lot of APIs, Frameworks. These are the ones I mostly use and where I have experience:
