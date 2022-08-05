@@ -24,8 +24,7 @@ but doing it fixed the issue and from 5-10 seconds now it takes 1-2 seconds. (Al
 ```zsh
 ## START NVM ##
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-alias nvm="unalias nvm; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm $@" # Custom: only load nvm upon first use, because it is slow
+alias nvm="unalias nvm; [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm $@" # Custom: only load nvm upon first use, because it is slow
 
 ## END NVM ##
 ```
