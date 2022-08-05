@@ -32,3 +32,13 @@ alias nvm="unalias nvm; [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_co
 
 # Did it work?
 Yeah, everything is fixed and I'm ok with it taking 1-2 seconds to load, I've got nvm (only enable it if I use the command), sdkman.io, fig.io, and homebrew.
+
+# Edit (Aug 5th, 2022)
+I have created the following alias to improve performance and only load sdkman.io when using it:
+```zsh
+## START SDKMAN ##
+export SDKMAN_DIR="$HOME/.sdkman"
+alias sdk="unalias sdk; [[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"; sdk $@"
+## END SDKMAN ##
+```
+Hope it helps ^^
