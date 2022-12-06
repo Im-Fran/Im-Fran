@@ -5,7 +5,7 @@ My zsh terminal load time is around 5-10 seconds
 I've added this at the start of the zshrc file:
 ```zsh
 # Init profiling
-zmodload zsh/prof
+zmodload zsh/zprof
 ```
 
 and this at the end of the file:
