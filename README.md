@@ -15,11 +15,12 @@ When I think "I don't know how to do this" I search in the docs. I've been throu
 ### Social links and contact
 - [Twitter](https://twitter.com/Im_Fran_)
 - [LinkedIn](https://www.linkedin.com/in/franciscosolismat)
-- [Instagram](https://instagram.com/imjustfran_)
-- [Email](mailto:fran@theprogramsrc.xyz)
+- [Instagram](https://instagram.com/fran.dev_)
+- [Email](mailto:imfran@duck.com)
 - [Discord](https://go.theprogramsrc.xyz/discord)
 
 ### Current Projects I'm working on
+- [franciscosolis.cl](https://github.com/Im-Fran/franciscosolis.cl) - My personal website
 - [SimpleCoreAPI](https://github.com/TheProgramSrc/SimpleCoreAPI) - A module based API
 - [TheProgramSrc Website](https://theprogramsrc.xyz) - A website that hosts all the products of TheProgramSrc
 - [TheProgramSrc Web API](https://api-v2.theprogramsrc.xyz/) - Web API for TheProgramSrc Products and Utils
