@@ -6,11 +6,11 @@ I don't consider myself as a 100/100 developer, I just started programming and, 
 When I think "I don't know how to do this" I search in the docs. I've been through many programming languages, frameworks and APIs, but I personally think that my main work is Website Developer and Java/Kotlin Software Developer.
 
 ### My Stats
-[![Fran's github stats](https://github-readme-stats.vercel.app/api?username=Im-Fran&show_icons=true&theme=dark&count_private=true&include_all_commits=true)](https://github.com/anuraghazra/github-readme-stats)
+[![Fran's github stats](https://imfran-github-readme-stats.vercel.app/api?username=Im-Fran&show_icons=true&theme=dark&count_private=true&include_all_commits=true)](https://github.com/anuraghazra/github-readme-stats)
 
-[![Fran's github stats](https://github-readme-stats.vercel.app/api/top-langs/?username=Im-Fran&theme=dark&langs_count=5&show_icons=true)](https://github.com/anuraghazra/github-readme-stats)
+[![Fran's github stats](https://imfran-github-readme-stats.vercel.app/api/top-langs/?username=Im-Fran&theme=dark&langs_count=5&show_icons=true)](https://github.com/anuraghazra/github-readme-stats)
 
-[![Fran's wakatime stats](https://github-readme-stats.vercel.app/api/wakatime?username=Fran&theme=dark&langs_count=5&show_icons=true)](https://github.com/anuraghazra/github-readme-stats)
+[![Fran's wakatime stats](https://imfran-github-readme-stats.vercel.app/api/wakatime?username=Fran&theme=dark&langs_count=5&show_icons=true)](https://github.com/anuraghazra/github-readme-stats)
 
 ### Social links and contact
 - [Twitter](https://twitter.com/Im_Fran_)
