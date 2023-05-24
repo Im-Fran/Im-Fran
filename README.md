@@ -5,6 +5,9 @@ I'm Francisco Solís, but I prefer to be called `Fran` 😃 I was born in Santia
 I don't consider myself as a 100/100 developer, I just started programming and, I don't really know how I know this much to create programs, it's like if I want to learn a new programming language I just check some projects on GitHub and search for examples in Youtube and that's all what I need to start programming. I never read the docs until it's too late, I always start coding some stuff like, testing projects and stuff.
 When I think "I don't know how to do this" I search in the docs. I've been through many programming languages, frameworks and APIs, but I personally think that my main work is Website Developer and Java/Kotlin Software Developer.
 
+### Discord Profile
+[![](https://lanyard.cnrad.dev/api/327226933542912000?theme=dark&hideTimestamp=true&idleMessage=Probably%20getting%20coffee%20at%20Starbucks%20%3AD)](https://discord.com/users/327226933542912000)
+
 ### My Stats
 [![Fran's github stats](https://imfran-github-readme-stats.vercel.app/api?username=Im-Fran&show_icons=true&theme=dark&count_private=true&include_all_commits=true)](https://github.com/anuraghazra/github-readme-stats)
 
