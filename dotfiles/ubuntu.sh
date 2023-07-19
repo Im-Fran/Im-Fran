@@ -3,8 +3,8 @@
 # Request sudo access (and update apt)
 sudo apt update
 
-# Now install curl if not present
-sudo apt install -y curl git
+# Install required packages
+sudo apt install -y build-essential procps curl file git
 
 # Install brew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
