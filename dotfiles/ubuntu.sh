@@ -15,6 +15,9 @@ sudo apt install -y build-essential procps curl file git
 # Generate a new zshrc file
 (echo '# Start of .zshrcfile'; echo; echo '# Init brew';echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> ~/.zshrc
 
+# Load current zshrc file
+source ~/.zshrc
+
 # Install brew packages from github required for the development.
 brew install "$(curl -fsSL https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/brew-packages)"
 
