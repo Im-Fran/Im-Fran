@@ -19,7 +19,7 @@ sudo apt install -y build-essential procps curl file git
 source ~/.zshrc
 
 # Install brew packages from github required for the development.
-brew install "$(curl -fsSL https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/brew-packages)"
+brew install $(curl -fsSL https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/brew-packages)
 
 # Install oh my zsh.
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
