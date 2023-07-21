@@ -12,8 +12,11 @@ sudo apt install -y build-essential procps curl file git zsh keychain
 # Load homebrew
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
+# Install brew taps from github required for the development.
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/brew/taps.sh)"
+
 # Install brew packages from github required for the development.
-brew install $(curl -fsSL https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/brew-packages)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/brew/packages.sh)"
 
 # Install oh my zsh.
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
