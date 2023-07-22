@@ -99,6 +99,22 @@ if [ -f ".phpver" ] && [ -z "$NO_PHPENV" ]; then
 	fi
 fi
 
+## copilot cli ##
+command -v github-copilot-cli >/dev/null 2>&1 && eval "$(github-copilot-cli alias -- "$0")"
+
+# Setup aliases
+alias zshconfig="nano ~/.zshrc"
+alias yarnconfig="nano ~/.yarnrc"
+alias nvimrc="nano ~/.config/nvim/init.vim"
+alias sdk="unalias sdk; [[ -s $SDKMAN_DIR/bin/sdkman-init.sh ]] && source $SDKMAN_DIR/bin/sdkman-init.sh; sdk $@"
+alias nvm="unalias nvm; [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm $@" # Custom: only load nvm upon first use, because it is slow
+alias sail="[ -f sail ] && sh sail || sh vendor/bin/sail"
+alias delete-old-cached-branches="git fetch origin --prune"
+
+# Functions
+transfer(){ if [ $# -eq 0 ];then echo "No arguments specified.\nUsage:\n transfer <file|directory>\n ... | transfer <file_name>">&2;return 1;fi;if tty -s;then file="$1";file_name=$(basename "$file");if [ ! -e "$file" ];then echo "$file: No such file or directory">&2;return 1;fi;if [ -d "$file" ];then file_name="$file_name.zip" ,;(cd "$file"&&zip -r -q - .)|curl --progress-bar --upload-file "-" "https://transfer.sh/$file_name"|tee /dev/null,;else cat "$file"|curl --progress-bar --upload-file "-" "https://transfer.sh/$file_name"|tee /dev/null;fi;else file_name=$1;curl --progress-bar --upload-file "-" "https://transfer.sh/$file_name"|tee /dev/null;fi;}
+
+# Load other utils
 ## nvmrc ##
 if [ -f ".nvmrc" ]; then
     nvm use > /dev/null 2>&1 
@@ -108,17 +124,3 @@ fi
 if [ -f ".sdkmanrc" ]; then
     sdk env > /dev/null 2>&1 
 fi
-
-## copilot cli ##
-command -v github-copilot-cli >/dev/null 2>&1 && eval "$(github-copilot-cli alias -- "$0")"
-
-# Setup aliases
-alias zshconfig="nano ~/.zshrc"
-alias yarnconfig="nano ~/.yarnrc"
-alias nvimrc="nano ~/.config/nvim/init.vim"
-alias sdk="unalias sdk; [[ -s $SDKMAN_DIR/bin/sdkman-init.sh ]] && source $SDKMAN_DIR/bin/sdkman-init.sh; sdk $@"
-alias sail="[ -f sail ] && sh sail || sh vendor/bin/sail"
-alias delete-old-cached-branches="git fetch origin --prune"
-
-# Functions
-transfer(){ if [ $# -eq 0 ];then echo "No arguments specified.\nUsage:\n transfer <file|directory>\n ... | transfer <file_name>">&2;return 1;fi;if tty -s;then file="$1";file_name=$(basename "$file");if [ ! -e "$file" ];then echo "$file: No such file or directory">&2;return 1;fi;if [ -d "$file" ];then file_name="$file_name.zip" ,;(cd "$file"&&zip -r -q - .)|curl --progress-bar --upload-file "-" "https://transfer.sh/$file_name"|tee /dev/null,;else cat "$file"|curl --progress-bar --upload-file "-" "https://transfer.sh/$file_name"|tee /dev/null;fi;else file_name=$1;curl --progress-bar --upload-file "-" "https://transfer.sh/$file_name"|tee /dev/null;fi;}
