@@ -32,3 +32,21 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 
 # Generate new ~/.zshrc file
 curl -o ~/.zshrc https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/ubuntu/zshrc
+
+# Load current zshrc
+source ~/.zshrc
+
+# Install node lts
+nvm install --lts
+
+# Upgrade npm 
+npm i -g npm@latest
+
+# Install github copilot cli
+npm i -g @githubnext/github-copilot-cli
+
+# Now enable yarn
+corepack enable
+
+# Install jdk 17.0.2 zulu
+sdk install java 17.0.2-zulu
