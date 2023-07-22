@@ -18,6 +18,12 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 # Install brew packages from github required for the development.
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/brew/packages.sh)"
 
+# Install NVM
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+
+# Install SDKMAN
+curl -s "https://get.sdkman.io" | bash
+
 # Install oh my zsh.
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
