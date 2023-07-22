@@ -114,6 +114,9 @@ alias delete-old-cached-branches="git fetch origin --prune"
 
 # Functions
 transfer(){ if [ $# -eq 0 ];then echo "No arguments specified.\nUsage:\n transfer <file|directory>\n ... | transfer <file_name>">&2;return 1;fi;if tty -s;then file="$1";file_name=$(basename "$file");if [ ! -e "$file" ];then echo "$file: No such file or directory">&2;return 1;fi;if [ -d "$file" ];then file_name="$file_name.zip" ,;(cd "$file"&&zip -r -q - .)|curl --progress-bar --upload-file "-" "https://transfer.sh/$file_name"|tee /dev/null,;else cat "$file"|curl --progress-bar --upload-file "-" "https://transfer.sh/$file_name"|tee /dev/null;fi;else file_name=$1;curl --progress-bar --upload-file "-" "https://transfer.sh/$file_name"|tee /dev/null;fi;}
+update_zshrc() {local local_hash remote_hash;local_hash=$(md5sum "$HOME/.zshrc" | awk '{print $1}');remote_hash=$(curl -s https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/ubuntu/zshrc | md5sum | awk '{print $1}'); if [[ "$local_hash" != "$remote_hash" ]]; then echo "Updating ~/.zshrc..."; curl -s https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/ubuntu/zshrc > "$HOME/.zshrc"; echo "Update completed."; else echo "No update needed. Local ~/.zshrc is already up-to-date."; fi}
+update_zshrc &!
+
 
 # Load other utils
 ## nvmrc ##
