@@ -128,3 +128,5 @@ fi
 if [ -f ".sdkmanrc" ]; then
     sdk env > /dev/null 2>&1 
 fi
+
+export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
