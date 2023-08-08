@@ -130,3 +130,8 @@ if [ -f ".sdkmanrc" ]; then
 fi
 
 export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
+
+# Load swift completion tool
+if [ -f "$HOME/.scripts/swift-completion-tool" ]; then
+    source $HOME/.scripts/swift-completion-tool
+fi
