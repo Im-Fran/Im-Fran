@@ -27,6 +27,11 @@ curl -s "https://get.sdkman.io" | bash
 # Install oh my zsh.
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
+# Setup swift autocompletion
+mkdir ~/.scripts
+swift package completion-tool generate-bash-script > ~/.scripts/swift-completion-tool
+chmod +x ~/.scripts/swift-completion-tool
+
 # Move the current ~/.zshrc file to a backup if it exists (to ~/.zshrc.bak)
 [ -f ~/.zshrc ] && mv ~/.zshrc ~/.zshrc-$(date +%Y%m%d).bak
 
