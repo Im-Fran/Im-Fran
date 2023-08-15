@@ -100,6 +100,26 @@ if [ -f ".phpver" ] && [ -z "$NO_PHPENV" ]; then
 	fi
 fi
 
+## run-script ##
+run-script() {
+    if [[ $# -eq 0 ]]; then
+        echo "Usage: run-script <scriptname>"
+        return 1
+    fi
+
+    local script_name="$1"
+    local script_url="https://github.com/Im-Fran/Im-Fran/raw/main/dotfiles/scripts/${script_name}"
+
+    if command -v curl &>/dev/null; then
+        curl -fsSL "${script_url}" | zsh
+    elif command -v wget &>/dev/null; then
+        wget -qO - "${script_url}" | zsh
+    else
+        echo "Error: Neither 'curl' nor 'wget' is available to fetch the script."
+        return 1
+    fi
+}
+
 ## copilot cli ##
 command -v github-copilot-cli >/dev/null 2>&1 && eval "$(github-copilot-cli alias -- "$0")"
 
