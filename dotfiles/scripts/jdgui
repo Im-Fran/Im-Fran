@@ -1,0 +1,37 @@
+#!/bin/sh
+
+# Check if the necessary commands are present
+if ! command -v java > /dev/null; then
+  echo "Error: java command not found. Please install Java and try again."
+  exit 1
+fi
+
+if ! command -v jq > /dev/null; then
+  echo "Error: jq command not found. Please install jq and try again."
+  exit 1
+fi
+
+if ! command -v curl > /dev/null; then
+  echo "Error: curl command not found. Please install curl and try again."
+  exit 1
+fi
+
+# Check if the folder ~/.jdgui exists
+if [ ! -d ~/.jdgui ]; then
+  mkdir -p ~/.jdgui
+fi
+
+# Get latest release information from Github API
+LATESTDATA=$(curl -fsSL https://api.github.com/repos/java-decompiler/jd-gui/releases/latest | jq '.assets[0]')
+
+# Get filename and download URL from release information
+FILENAME=$(echo $LATESTDATA | jq -r '.name')
+DOWNLOAD_URL=$(echo $LATESTDATA | jq -r '.browser_download_url')
+
+# Download file if it doesn't exist in the target folder
+if [ ! -f ~/.jdgui/"$FILENAME" ]; then
+  curl -s -L "$DOWNLOAD_URL" -o ~/.jdgui/"$FILENAME"
+fi
+
+# Run JD-GUI with the downloaded JAR file
+java -jar ~/.jdgui/"$FILENAME" & disown
