@@ -17,8 +17,7 @@ zstyle ':omz:update' frequency 3 # Update every 3 days
 COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
 
 # Load OhMyZSH Plugins
-load_omz_plugins() { local plugins_url='https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/ohmyzsh/plugins'; local response=$(curl -s "$plugins_url"); if [ -n "$response" ]; then plugins=(${(ps:\n:)response}); export plugins; echo "Loaded OhMyZSH plugins from $plugins_url"; else echo "Failed to load OhMyZSH plugins from $plugins_url"; fi; }
-load_omz_plugins
+plugins=("${(s: :)$(curl -s "https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/ohmyzsh/plugins")}")
 
 # Load OhMyZSH
 source $ZSH/oh-my-zsh.sh
