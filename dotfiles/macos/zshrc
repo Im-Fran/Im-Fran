@@ -1,5 +1,10 @@
 # Start of .zshrcfile
 
+# Start profiling if requested.
+if [[ -n "$ZSH_PROFILE" ]]; then
+  zmodload zsh/zprof
+fi
+
 # Load PATH
 export PATH="/usr/local/bin/:/usr/local/sbin:$HOME/Library/Python/3.9/bin:$HOME/.config/composer/vendor/bin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$HOME/.local/share/JetBrains/Toolbox/scripts:/Applications/Docker.app/Contents/Resources/bin/:$HOME/.nvm/current/bin/:$PATH"
 
@@ -111,6 +116,7 @@ alias nvm="unalias nvm; [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_co
 alias sail="[ -f sail ] && sh sail || sh vendor/bin/sail"
 alias delete-old-cached-branches="git fetch origin --prune"
 alias run-script='runscript'
+alias profilezsh='zshrcProfile() { export ZSH_PROFILE=true; exec zsh }; zshrcProfile'
 
 # Functions
 transfer(){ if [ $# -eq 0 ];then echo "No arguments specified.\nUsage:\n transfer <file|directory>\n ... | transfer <file_name>">&2;return 1;fi;if tty -s;then file="$1";file_name=$(basename "$file");if [ ! -e "$file" ];then echo "$file: No such file or directory">&2;return 1;fi;if [ -d "$file" ];then file_name="$file_name.zip" ,;(cd "$file"&&zip -r -q - .)|curl --progress-bar --upload-file "-" "https://transfer.sh/$file_name"|tee /dev/null,;else cat "$file"|curl --progress-bar --upload-file "-" "https://transfer.sh/$file_name"|tee /dev/null;fi;else file_name=$1;curl --progress-bar --upload-file "-" "https://transfer.sh/$file_name"|tee /dev/null;fi;}
@@ -132,4 +138,9 @@ fi
 # Load swift completion tool
 if [ -f "$HOME/.scripts/swift-completion-tool" ]; then
     source $HOME/.scripts/swift-completion-tool
+fi
+
+# Stop profiling
+if [[ -n "$ZSH_PROFILE" ]]; then
+  zprof
 fi
