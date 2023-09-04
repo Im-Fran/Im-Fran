@@ -1,0 +1,196 @@
+<application>
+  <component name="ToolWindowLayout"><![CDATA[{
+  "activeLayoutName": "Default",
+  "layouts": {
+    "Default": {
+      "v2": [
+        {
+          "id": "Bookmarks",
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.33035713,
+          "isSplit": true
+        },
+        {
+          "id": "Pull Requests",
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.33035713
+        },
+        {
+          "id": "Commit",
+          "order": 1,
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.25035715
+        },
+        {
+          "id": "Structure",
+          "order": 2,
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.25035715,
+          "isSplit": true
+        },
+        {
+          "id": "TODO",
+          "anchor": "BOTTOM",
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.3305
+        },
+        {
+          "id": "Find",
+          "anchor": "BOTTOM",
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.3305
+        },
+        {
+          "id": "Version Control",
+          "order": 0,
+          "anchor": "BOTTOM",
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.3305
+        },
+        {
+          "id": "Problems",
+          "order": 1,
+          "anchor": "BOTTOM"
+        },
+        {
+          "id": "Problems View",
+          "order": 2,
+          "anchor": "BOTTOM",
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.3305
+        },
+        {
+          "id": "Terminal",
+          "order": 3,
+          "anchor": "BOTTOM",
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.33033174
+        },
+        {
+          "id": "Find Mixins",
+          "order": 4,
+          "anchor": "BOTTOM",
+          "weight": 0.33033174
+        },
+        {
+          "id": "Run",
+          "order": 4,
+          "anchor": "BOTTOM",
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.3305
+        },
+        {
+          "id": "Services",
+          "order": 4,
+          "anchor": "BOTTOM",
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.3305
+        },
+        {
+          "id": "Build",
+          "order": 4,
+          "anchor": "BOTTOM",
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.33033174
+        },
+        {
+          "id": "Debug",
+          "order": 4,
+          "anchor": "BOTTOM",
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.3305
+        },
+        {
+          "id": "Project",
+          "order": 0,
+          "anchor": "RIGHT",
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "contentUiType": "COMBO",
+          "weight": 0.25035715
+        },
+        {
+          "id": "Notifications",
+          "order": 1,
+          "anchor": "RIGHT",
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.25035715
+        },
+        {
+          "id": "AIAssistant",
+          "order": 2,
+          "anchor": "RIGHT",
+          "weight": 0.25
+        },
+        {
+          "id": "Database",
+          "order": 3,
+          "anchor": "RIGHT",
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.25035715
+        },
+        {
+          "id": "Gradle",
+          "order": 4,
+          "anchor": "RIGHT",
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.25035715
+        },
+        {
+          "id": "github.copilotToolWindow",
+          "order": 5,
+          "anchor": "RIGHT"
+        },
+        {
+          "id": "Key Promoter X",
+          "order": 5,
+          "anchor": "RIGHT"
+        },
+        {
+          "id": "Maven",
+          "order": 5,
+          "anchor": "RIGHT",
+          "weight": 0.25
+        },
+        {
+          "id": "Pets",
+          "order": 5,
+          "anchor": "RIGHT",
+          "floatingBounds": [
+            1583,
+            59,
+            301,
+            158
+          ],
+          "type": "WINDOWED",
+          "isActiveOnStart": true,
+          "isVisible": true,
+          "weight": 0.32994792
+        }
+      ],
+      "unifiedWeights": {
+        "top": 0.33,
+        "left": 0.25035715,
+        "bottom": 0.33033174,
+        "right": 0.32994792
+      }
+    }
+  }
+}]]></component>
+</application>
