@@ -156,3 +156,8 @@ export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PAT
 if [ -f "$HOME/.scripts/swift-completion-tool" ]; then
     source $HOME/.scripts/swift-completion-tool
 fi
+
+# Load environment variables
+if [ -f "$HOME/.env" ]; then
+    source $HOME/.env
+fi
