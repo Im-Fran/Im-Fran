@@ -140,6 +140,11 @@ if [ -f "$HOME/.scripts/swift-completion-tool" ]; then
     source $HOME/.scripts/swift-completion-tool
 fi
 
+# Load environment variables
+if [ -f "$HOME/.env" ]; then
+    source $HOME/.env
+fi
+
 # Stop profiling
 if [[ -n "$ZSH_PROFILE" ]]; then
   zprof
