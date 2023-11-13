@@ -72,6 +72,9 @@ chmod +x /Volumes/Development/.scripts/swift-completion-tool
 # Generate new ~/.zshrc file
 curl -o $HOME/.zshrc https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/macos/zshrc
 
+# Install zsh nvm plugin
+git clone https://github.com/lukechilds/zsh-nvm ~/.oh-my-zsh/custom/plugins/zsh-nvm
+
 # Load current zshrc
 source $HOME/.zshrc
 
