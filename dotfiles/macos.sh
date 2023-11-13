@@ -43,17 +43,6 @@ fi
 # Install brew taps from github required for the development.
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/brew/taps.sh)"
 
-if [ ! -d $HOME/.nvm ]; then
-  # Install NVM
-  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
-
-  # Move NVM to development volume
-  mv $HOME/.nvm /Volumes/Development/.nvm
-
-  # Create symlink for .nvm
-  ln -s /Volumes/Development/.nvm $HOME/.nvm
-fi
-
 if [ ! -d $HOME/.sdkman ]; then
   # Install SDKMAN
   curl -s "https://get.sdkman.io" | bash
@@ -85,9 +74,6 @@ curl -o $HOME/.zshrc https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotf
 
 # Load current zshrc
 source $HOME/.zshrc
-
-# Load nvm to use it
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
 # Install node lts
 nvm install --lts
