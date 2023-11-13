@@ -11,7 +11,11 @@ if ! command -v brew &> /dev/null; then
 fi
 
 # Load homebrew
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+if [[ $(uname -p) == "arm" ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+else 
+  eval "$(/usr/local/bin/brew shellenv)"
+fi
 
 # Install brew taps from github required for the development.
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/brew/taps.sh)"
