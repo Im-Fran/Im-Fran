@@ -93,6 +93,9 @@ npm i -g @githubnext/github-copilot-cli
 # Now enable yarn
 corepack enable
 
+# Load sdkman to use it
+[[ -s $SDKMAN_DIR/bin/sdkman-init.sh ]] && source $SDKMAN_DIR/bin/sdkman-init.sh
+ 
 # Install jdk 17.0.2 zulu
 sdk install java 17.0.2-zulu
 
