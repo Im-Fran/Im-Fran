@@ -7,7 +7,7 @@ fi
 
 # Move all other files to development volume and create symlinks
 [ -d $HOME/.nvm ] && [ ! -L $HOME/.nvm ] && mv $HOME/.nvm /Volumes/Development/.nvm && ln -s /Volumes/Development/.nvm $HOME/.nvm
-[ ! -d $HOME/.nvm ] && mkdir /Volumes/Development/.nvm && ln -s /Volumes/Development/.nvm $HOME/.yarn
+[ ! -d $HOME/.nvm ] && mkdir /Volumes/Development/.nvm && ln -s /Volumes/Development/.nvm $HOME/.nvm
 
 [ -d $HOME/.yarn ] && [ ! -L $HOME/.yarn ] && mv $HOME/.yarn /Volumes/Development/.yarn && ln -s /Volumes/Development/.yarn $HOME/.yarn
 [ ! -d $HOME/.yarn ] && mkdir /Volumes/Development/.yarn && ln -s /Volumes/Development/.yarn $HOME/.yarn
