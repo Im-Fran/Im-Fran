@@ -64,7 +64,7 @@ fi
 
 if [ ! -d $HOME/.oh-my-zsh ]; then
   # Install oh my zsh.
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 fi
 
 # Create symlink for development volume
