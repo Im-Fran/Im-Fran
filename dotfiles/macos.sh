@@ -86,6 +86,9 @@ curl -o $HOME/.zshrc https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotf
 # Load current zshrc
 source $HOME/.zshrc
 
+# Load nvm to use it
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
 # Install node lts
 nvm install --lts
 
