@@ -45,7 +45,7 @@ fi
 
 if [ ! -d $HOME/.nvm ]; then
   # Install NVM
-  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 
   # Move NVM to development volume
   mv $HOME/.nvm /Volumes/Development/.nvm
