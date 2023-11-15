@@ -7,10 +7,12 @@ sudo apt update
 sudo apt install -y build-essential procps curl file git zsh keychain
 
 # Install brew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+if ! command -v brew &> /dev/null; then
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# Load homebrew
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  # Load homebrew
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
 
 # Install brew taps from github required for the development.
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/brew/taps.sh)"
@@ -18,17 +20,23 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 # Install brew packages from github required for the development.
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/brew/packages.sh)"
 
-# Install NVM
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
-
 # Install SDKMAN
-curl -s "https://get.sdkman.io" | bash
+if [ ! -d $HOME/.sdkman ]; then
+  curl -s "https://get.sdkman.io" | bash
+
+  # Move SDKMAN to development volume
+  mv $HOME/.sdkman /Volumes/Development/.sdkman
+fi
 
 # Install oh my zsh.
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+if [ ! -d $HOME/.oh-my-zsh ]; then
+  RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+fi
+
+# Create scripts folder and symlink
+[ ! -d $HOME/.scripts ] &&mkdir /Volumes/Development/.scripts && ln -s /Volumes/Development/.scripts $HOME/.scripts
 
 # Setup swift autocompletion
-mkdir ~/.scripts
 swift package completion-tool generate-bash-script > ~/.scripts/swift-completion-tool
 chmod +x ~/.scripts/swift-completion-tool
 
@@ -37,6 +45,9 @@ chmod +x ~/.scripts/swift-completion-tool
 
 # Generate new ~/.zshrc file
 curl -o ~/.zshrc https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/ubuntu/zshrc
+
+# Install zsh nvm plugin
+git clone https://github.com/lukechilds/zsh-nvm ~/.oh-my-zsh/custom/plugins/zsh-nvm
 
 # Load current zshrc
 source ~/.zshrc
