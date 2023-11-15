@@ -18,6 +18,13 @@
           "weight": 0.33035713
         },
         {
+          "id": "Learn",
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "isShowStripeButton": false,
+          "weight": 0.33035713
+        },
+        {
           "id": "Commit",
           "order": 1,
           "type": "SLIDING",
@@ -25,12 +32,34 @@
           "weight": 0.25035715
         },
         {
-          "id": "Structure",
+          "id": "Welcome to GitHub Copilot",
           "order": 2,
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "isShowStripeButton": false,
+          "weight": 0.33035713
+        },
+        {
+          "id": "Structure",
+          "order": 5,
           "type": "SLIDING",
           "internalType": "SLIDING",
           "weight": 0.25035715,
           "isSplit": true
+        },
+        {
+          "id": "Dart Analysis",
+          "anchor": "BOTTOM",
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.3305
+        },
+        {
+          "id": "Profiler",
+          "anchor": "BOTTOM",
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.3305
         },
         {
           "id": "TODO",
@@ -55,13 +84,55 @@
           "weight": 0.3305
         },
         {
-          "id": "Problems",
+          "id": "Notifications",
           "order": 1,
+          "anchor": "BOTTOM",
+          "floatingBounds": [
+            1516,
+            138,
+            350,
+            942
+          ],
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.25035715,
+          "isSplit": true
+        },
+        {
+          "id": "Endpoints",
+          "order": 2,
+          "anchor": "BOTTOM",
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.33035713,
+          "isSplit": true
+        },
+        {
+          "id": "Ant",
+          "order": 3,
+          "anchor": "BOTTOM",
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.33035713,
+          "isSplit": true
+        },
+        {
+          "id": "Pets",
+          "order": 4,
+          "anchor": "BOTTOM",
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.3305,
+          "isSplit": true
+        },
+        {
+          "id": "Problems",
+          "order": 6,
           "anchor": "BOTTOM"
         },
         {
           "id": "Problems View",
-          "order": 2,
+          "order": 7,
           "anchor": "BOTTOM",
           "type": "SLIDING",
           "internalType": "SLIDING",
@@ -69,21 +140,31 @@
         },
         {
           "id": "Terminal",
-          "order": 3,
+          "order": 8,
           "anchor": "BOTTOM",
           "type": "SLIDING",
           "internalType": "SLIDING",
-          "weight": 0.33033174
+          "weight": 0.3305
         },
         {
-          "id": "Find Mixins",
-          "order": 4,
+          "id": "Debug",
+          "order": 9,
           "anchor": "BOTTOM",
-          "weight": 0.33033174
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.3305
+        },
+        {
+          "id": "Messages",
+          "order": 9,
+          "anchor": "BOTTOM",
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.3305
         },
         {
           "id": "Run",
-          "order": 4,
+          "order": 9,
           "anchor": "BOTTOM",
           "type": "SLIDING",
           "internalType": "SLIDING",
@@ -91,50 +172,28 @@
         },
         {
           "id": "Services",
-          "order": 4,
+          "order": 9,
           "anchor": "BOTTOM",
           "type": "SLIDING",
           "internalType": "SLIDING",
           "weight": 0.3305
         },
         {
-          "id": "Build",
-          "order": 4,
-          "anchor": "BOTTOM",
-          "type": "SLIDING",
-          "internalType": "SLIDING",
-          "weight": 0.33033174
-        },
-        {
-          "id": "Debug",
-          "order": 4,
-          "anchor": "BOTTOM",
-          "type": "SLIDING",
-          "internalType": "SLIDING",
-          "weight": 0.3305
+          "id": "AIAssistant",
+          "order": 1,
+          "anchor": "RIGHT",
+          "weight": 0.25
         },
         {
           "id": "Project",
-          "order": 0,
+          "order": 2,
           "anchor": "RIGHT",
           "type": "SLIDING",
           "internalType": "SLIDING",
           "contentUiType": "COMBO",
-          "weight": 0.25035715
-        },
-        {
-          "id": "Notifications",
-          "order": 1,
-          "anchor": "RIGHT",
-          "type": "SLIDING",
-          "internalType": "SLIDING",
-          "weight": 0.25035715
-        },
-        {
-          "id": "AIAssistant",
-          "order": 2,
-          "anchor": "RIGHT",
-          "weight": 0.25
+          "isActiveOnStart": true,
+          "isVisible": true,
+          "weight": 0.27821428
         },
         {
           "id": "Database",
@@ -148,47 +207,74 @@
           "id": "Gradle",
           "order": 4,
           "anchor": "RIGHT",
-          "type": "SLIDING",
-          "internalType": "SLIDING",
-          "weight": 0.25035715
+          "weight": 0.25
         },
         {
           "id": "github.copilotToolWindow",
           "order": 5,
-          "anchor": "RIGHT"
+          "anchor": "RIGHT",
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.33035713
         },
         {
           "id": "Key Promoter X",
-          "order": 5,
-          "anchor": "RIGHT"
+          "order": 6,
+          "anchor": "RIGHT",
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "isShowStripeButton": false,
+          "weight": 0.33035713
         },
         {
           "id": "Maven",
-          "order": 5,
+          "order": 7,
           "anchor": "RIGHT",
           "weight": 0.25
         },
         {
-          "id": "Pets",
-          "order": 5,
+          "id": "GitHub Copilot Chat",
+          "order": 8,
           "anchor": "RIGHT",
-          "floatingBounds": [
-            1583,
-            59,
-            301,
-            158
-          ],
-          "type": "WINDOWED",
-          "isActiveOnStart": true,
-          "isVisible": true,
-          "weight": 0.32994792
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.33035713
+        },
+        {
+          "id": "Hierarchy",
+          "order": 9,
+          "anchor": "RIGHT",
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.33035713
+        },
+        {
+          "id": "Flutter Inspector",
+          "order": 10,
+          "anchor": "RIGHT",
+          "weight": 0.33035713,
+          "isSplit": true
+        },
+        {
+          "id": "Flutter Performance",
+          "order": 11,
+          "anchor": "RIGHT",
+          "weight": 0.33035713,
+          "isSplit": true
+        },
+        {
+          "id": "Flutter Outline",
+          "order": 12,
+          "anchor": "RIGHT",
+          "weight": 0.33035713,
+          "isSplit": true
         }
       ],
       "unifiedWeights": {
         "top": 0.33,
-        "left": 0.25035715,
-        "bottom": 0.33033174,
-        "right": 0.32994792
+        "left": 0.33035713,
+        "bottom": 0.3305,
+        "right": 0.25035715
       }
     }
   }
