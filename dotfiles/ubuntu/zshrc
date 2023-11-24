@@ -7,7 +7,7 @@ export PATH="/usr/local/bin/:/usr/local/sbin:$HOME/Library/Python/3.9/bin:$HOME/
 export ZSH="$HOME/.oh-my-zsh"
 
 # OhMyZSH Theme
-ZSH_THEME="robbyrussell" # Set ohmyzsh theme
+ZSH_THEME="powerlevel10k/powerlevel10k" # Set ohmyzsh theme
 
 # OhMyZSH Auto Updater
 zstyle ':omz:update' mode auto # Update automatically without asking
