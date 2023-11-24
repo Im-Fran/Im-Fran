@@ -57,6 +57,9 @@ fi
 if [ ! -d $HOME/.oh-my-zsh ]; then
   # Install oh my zsh.
   RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  
+  # Install theme
+  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 fi
 
 # Create symlink for development volume
