@@ -112,7 +112,6 @@ alias zshconfig="nano ~/.zshrc"
 alias yarnconfig="nano ~/.yarnrc"
 alias nvimrc="nano ~/.config/nvim/init.vim"
 alias sdk="unalias sdk; [[ -s $SDKMAN_DIR/bin/sdkman-init.sh ]] && source $SDKMAN_DIR/bin/sdkman-init.sh; sdk $@"
-alias nvm="unalias nvm; [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm $@" # Custom: only load nvm upon first use, because it is slow
 alias sail="[ -f sail ] && sh sail || sh vendor/bin/sail"
 alias delete-old-cached-branches="git fetch origin --prune"
 alias run-script='runscript'
