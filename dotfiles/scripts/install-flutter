@@ -1,13 +1,8 @@
 #!/bin/sh
 
-if ! command -v zsh > /dev/null; then
-  echo "Error: ZSH is needed to run this script!"
-  exit 1
-fi
-
 if ! command -v curl > /dev/null; then
   echo "Error: Curl is needed to run this script!"
   exit 1
 fi
 
-zsh -c "$(curl -fsSL https://gist.githubusercontent.com/Im-Fran/a81e3270f46994dc0419ed0171cf4305/raw/b97141b3c1e34c0944b06b5780ed4fe487f93844/install_flutter.sh)"
+sh -c "$(curl -fsSL https://gist.githubusercontent.com/Im-Fran/a81e3270f46994dc0419ed0171cf4305/raw/b97141b3c1e34c0944b06b5780ed4fe487f93844/install_flutter.sh)"
