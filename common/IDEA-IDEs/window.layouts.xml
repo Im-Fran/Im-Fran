@@ -36,8 +36,7 @@
           "order": 2,
           "type": "SLIDING",
           "internalType": "SLIDING",
-          "isShowStripeButton": false,
-          "weight": 0.33035713
+          "weight": 0.3305271
         },
         {
           "id": "Structure",
@@ -82,21 +81,6 @@
           "type": "SLIDING",
           "internalType": "SLIDING",
           "weight": 0.3305
-        },
-        {
-          "id": "Notifications",
-          "order": 1,
-          "anchor": "BOTTOM",
-          "floatingBounds": [
-            1516,
-            138,
-            350,
-            942
-          ],
-          "type": "SLIDING",
-          "internalType": "SLIDING",
-          "weight": 0.25035715,
-          "isSplit": true
         },
         {
           "id": "Endpoints",
@@ -182,6 +166,7 @@
           "id": "AIAssistant",
           "order": 1,
           "anchor": "RIGHT",
+          "isShowStripeButton": false,
           "weight": 0.25
         },
         {
@@ -191,8 +176,6 @@
           "type": "SLIDING",
           "internalType": "SLIDING",
           "contentUiType": "COMBO",
-          "isActiveOnStart": true,
-          "isVisible": true,
           "weight": 0.27821428
         },
         {
@@ -268,13 +251,33 @@
           "anchor": "RIGHT",
           "weight": 0.33035713,
           "isSplit": true
+        },
+        {
+          "id": "Laravel Tinker",
+          "order": 12,
+          "anchor": "RIGHT"
+        },
+        {
+          "id": "Notifications",
+          "order": 13,
+          "anchor": "RIGHT",
+          "floatingBounds": [
+            1516,
+            138,
+            350,
+            942
+          ],
+          "type": "SLIDING",
+          "internalType": "SLIDING",
+          "weight": 0.25073206,
+          "isSplit": true
         }
       ],
       "unifiedWeights": {
         "top": 0.33,
-        "left": 0.33035713,
-        "bottom": 0.3305,
-        "right": 0.25035715
+        "left": 0.3305271,
+        "bottom": 0.25067934,
+        "right": 0.25073206
       }
     }
   }
