@@ -127,8 +127,8 @@ update_zshrc() {
 
     local local_md5 remote_md5
 
-    local_md5=$(md5sum "$HOME/.zshrc" | awk '{print $1}')
-    remote_md5=$(curl -s https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/macos/zshrc | md5sum | awk '{print $1}')
+    local_md5=$(cat "$HOME/.zshrc" | md5)
+    remote_md5=$(curl -fsSL https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/macos/zshrc | md5)
 
     if [[ "$local_md5" != "$remote_md5" ]]; then
         curl -s https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/macos/zshrc > "$HOME/.zshrc"
