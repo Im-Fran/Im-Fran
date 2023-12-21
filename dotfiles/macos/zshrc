@@ -46,11 +46,10 @@ if [ -f "/usr/local/bin/brew" ]; then # macOS
 fi
 
 DEVELOPMENT_DIR="/Volumes/Development"
-SDKMAN_DIR="$DEVELOPMENT_DIR/.sdkman"
 NVM_DIR="$DEVELOPMENT_DIR/.nvm"
 COREPACK_HOME="$DEVELOPMENT_DIR/.node/corepack"
 
-export PATH="$SDKMAN_DIR/candidates/java/current/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/.local/bin:$PATH"
+export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/.local/bin:$PATH"
 
 ## Load nvm paths/configs ##
 if [ -d "$NVM_DIR/alias/default" ]; then
@@ -111,7 +110,6 @@ command -v github-copilot-cli >/dev/null 2>&1 && eval "$(github-copilot-cli alia
 alias zshconfig="nano ~/.zshrc"
 alias yarnconfig="nano ~/.yarnrc"
 alias nvimrc="nano ~/.config/nvim/init.vim"
-alias sdk="unalias sdk; [[ -s $SDKMAN_DIR/bin/sdkman-init.sh ]] && source $SDKMAN_DIR/bin/sdkman-init.sh; sdk $@"
 alias sail="[ -f sail ] && sh sail || sh vendor/bin/sail"
 alias delete-old-cached-branches="git fetch origin --prune"
 alias run-script='runscript'
@@ -142,11 +140,6 @@ update_zshrc &!
 ## nvmrc ##
 if [ -f ".nvmrc" ]; then
     nvm use > /dev/null 2>&1 
-fi
-
-## sdkmanrc ##
-if [ -f ".sdkmanrc" ]; then
-    sdk env > /dev/null 2>&1 
 fi
 
 # Load swift completion tool
