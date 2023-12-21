@@ -20,14 +20,6 @@ fi
 # Install brew packages from github required for the development.
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/brew/packages.sh)"
 
-# Install SDKMAN
-if [ ! -d $HOME/.sdkman ]; then
-  curl -s "https://get.sdkman.io" | bash
-
-  # Move SDKMAN to development volume
-  mv $HOME/.sdkman /Volumes/Development/.sdkman
-fi
-
 # Install oh my zsh.
 if [ ! -d $HOME/.oh-my-zsh ]; then
   RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -65,6 +57,3 @@ npm i -g @githubnext/github-copilot-cli
 
 # Now enable yarn
 corepack enable
-
-# Install jdk 17.0.2 zulu
-sdk install java 17.0.2-zulu
