@@ -46,14 +46,6 @@ fi
 # Install brew taps from github required for the development.
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/brew/taps.sh)"
 
-if [ ! -d $HOME/.sdkman ]; then
-  # Install SDKMAN
-  curl -s "https://get.sdkman.io" | bash
-
-  # Move SDKMAN to development volume
-  mv $HOME/.sdkman /Volumes/Development/.sdkman
-fi
-
 if [ ! -d $HOME/.oh-my-zsh ]; then
   # Install oh my zsh.
   RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -95,10 +87,4 @@ npm i -g @githubnext/github-copilot-cli
 
 # Now enable yarn
 corepack enable
-
-# Load sdkman to use it
-[[ -s $SDKMAN_DIR/bin/sdkman-init.sh ]] && source $SDKMAN_DIR/bin/sdkman-init.sh
- 
-# Install jdk 17.0.2 zulu
-sdk install java 17.0.2-zulu
 
