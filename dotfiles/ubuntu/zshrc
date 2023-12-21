@@ -45,28 +45,24 @@ fi
 ## setup directories ##
 if [[ "$(uname -r)" =~ "microsoft" ]]; then # WSL
     DEVELOPMENT_DIR="/home/fran/Development"
-    SDKMAN_DIR="$HOME/.sdkman"
     NVM_DIR="$HOME/.nvm"
     COREPACK_HOME="$HOME/.node/corepack"
 elif [[ "$(uname)" =~ "Linux" ]]; then
     DEVELOPMENT_DIR="/home/fran/Development"
-    SDKMAN_DIR="$HOME/.sdkman"
     NVM_DIR="$HOME/.nvm"
     COREPACK_HOME="$HOME/.node/corepack"
 elif  [[ "$(uname)" =~ "Darwin" ]]; then # macOS
     DEVELOPMENT_DIR="/Volumes/Development"
-    SDKMAN_DIR="$DEVELOPMENT_DIR/.sdkman"
     NVM_DIR="$DEVELOPMENT_DIR/.nvm"
     COREPACK_HOME="$DEVELOPMENT_DIR/.node/corepack"
 else # Any other system
     DEVELOPMENT_DIR="$HOME/Development"
-    SDKMAN_DIR="$HOME/.sdkmanrc"
     NVM_DIR="$HOME/.nvm"
     COREPACK_HOME="$HOME/.node/corepack"
     echo "Unknown System! Please add '$(uname)' to dotfiles."
 fi
 
-export PATH="$SDKMAN_DIR/candidates/java/current/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME_DIR/.fig/bin:$HOME/.local/bin:$PATH"
+export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME_DIR/.fig/bin:$HOME/.local/bin:$PATH"
 
 ## Load nvm paths/configs ##
 if [ -d "$NVM_DIR/alias/default" ]; then
@@ -127,7 +123,6 @@ command -v github-copilot-cli >/dev/null 2>&1 && eval "$(github-copilot-cli alia
 alias zshconfig="nano ~/.zshrc"
 alias yarnconfig="nano ~/.yarnrc"
 alias nvimrc="nano ~/.config/nvim/init.vim"
-alias sdk="unalias sdk; [[ -s $SDKMAN_DIR/bin/sdkman-init.sh ]] && source $SDKMAN_DIR/bin/sdkman-init.sh; sdk $@"
 alias sail="[ -f sail ] && sh sail || sh vendor/bin/sail"
 alias delete-old-cached-branches="git fetch origin --prune"
 alias run-script='runscript'
@@ -158,11 +153,6 @@ update_zshrc &!
 ## nvmrc ##
 if [ -f ".nvmrc" ]; then
     nvm use > /dev/null 2>&1 
-fi
-
-## sdkmanrc ##
-if [ -f ".sdkmanrc" ]; then
-    sdk env > /dev/null 2>&1 
 fi
 
 export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
