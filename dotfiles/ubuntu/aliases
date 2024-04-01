@@ -1,0 +1,52 @@
+# Aliases
+
+## LARAVEL ##
+alias artisan="sail art"
+alias art="sail art"
+alias pint="sail pint"
+alias t='[ -f vendor/bin/phpunit ] && vendor/bin/phpunit || phpunit'
+alias artr:l="sail art route:list"
+alias art:m="sail art migrate"
+alias art:m:r="sail art migrate:refresh"
+alias art:m:rs="sail art migrate:refresh --seed"
+alias sail:c="sail composer $@"
+alias sail:cu="sail composer update $@"
+alias sail:ci="sail composer install $@"
+alias sail:cr="sail composer require $@"
+alias tinker="sail artisan tinker"
+
+## GIT ##
+alias gwip="ga . && gcsm 'wip'"
+
+## FLUTTER ##
+alias flutter="fvm flutter"
+alias dart="fvm dart"
+alias pub="flutter pub"
+
+## DOCKER ##
+alias d="docker"
+alias dc="docker compose"
+
+## MISC ##
+alias publicip='dig +short myip.opendns.com @resolver1.opendns.com'
+
+## DIRECTORIES ##
+alias ll='ls -FGlAhp'
+alias ..="cd ../"
+alias ...="cd ../../"
+alias ....="cd ../../../"
+alias .....="cd ../../../../"
+
+alias df="df -h"
+alias diskusage="df"
+alias fu="du -ch"
+alias folderusage="fu"
+alias tfu="du -sh"
+alias totalfolderusage="tfu"
+
+## FUNCTIONS ##
+mkcdir ()
+{
+    mkdir -p -- "$1" &&
+    cd -P -- "$1"
+}
