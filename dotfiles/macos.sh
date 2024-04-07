@@ -48,7 +48,8 @@ fi
 
 if [ ! -d $HOME/.oh-my-zsh ]; then
   # Install oh my zsh.
-  RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  export RUNZSH="no" 
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
   
   # Install theme
   git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
@@ -70,21 +71,6 @@ chmod +x /Volumes/Development/.scripts/swift-completion-tool
 # Generate new ~/.zshrc file
 curl -o $HOME/.zshrc https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/macos/zshrc
 
-# Install zsh nvm plugin
-git clone https://github.com/lukechilds/zsh-nvm ~/.oh-my-zsh/custom/plugins/zsh-nvm
-
 # Load current zshrc
 source $HOME/.zshrc
-
-# Install node lts
-nvm install --lts
-
-# Upgrade npm 
-npm i -g npm@latest
-
-# Install github copilot cli
-npm i -g @githubnext/github-copilot-cli
-
-# Now enable yarn
-corepack enable
 
