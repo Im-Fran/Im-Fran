@@ -40,20 +40,8 @@ chmod +x ~/.scripts/swift-completion-tool
 # Generate new ~/.zshrc file
 curl -o ~/.zshrc https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/ubuntu/zshrc
 
-# Install zsh nvm plugin
-git clone https://github.com/lukechilds/zsh-nvm ~/.oh-my-zsh/custom/plugins/zsh-nvm
-
 # Load current zshrc
 source ~/.zshrc
-
-# Install node lts
-nvm install --lts
-
-# Upgrade npm 
-npm i -g npm@latest
-
-# Install github copilot cli
-npm i -g @githubnext/github-copilot-cli
 
 # Now enable yarn
 corepack enable
