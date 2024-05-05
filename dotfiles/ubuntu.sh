@@ -42,6 +42,3 @@ curl -o ~/.zshrc https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles
 
 # Load current zshrc
 source ~/.zshrc
-
-# Now enable yarn
-corepack enable
