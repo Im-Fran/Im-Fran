@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Define the base URL for downloading Discord
+BASE_URL="https://discord.com/api/download?platform=linux&format=deb"
+
+# Fetch the redirect URL which contains the latest version number
+REDIRECT_URL=$(curl -sIL $BASE_URL | grep -i 'location:' | awk '{print $2}' | tr -d '\r')
+
+# Extract the version number from the redirect URL
+VERSION=$(echo $REDIRECT_URL | grep -oP '(?<=linux/)[^/]+')
+
+# Set the version as an environment variable
+export DISCORD_VERSION=$VERSION
+
+# Define the installation directory based on the version
+INSTALL_DIR="$HOME/.config/discord/$VERSION"
+
+# Check if the latest version is already installed
+if [ -d "$INSTALL_DIR" ]; then
+    echo "Discord version $DISCORD_VERSION is already installed."
+else
+    echo "Installing Discord version $DISCORD_VERSION..."
+
+    # Download the .deb package
+    wget -O /tmp/discord-$DISCORD_VERSION.deb $REDIRECT_URL
+
+    # Install the .deb package
+    sudo dpkg -i /tmp/discord-$DISCORD_VERSION.deb
+
+    # Remove the downloaded package to clean up
+    rm /tmp/discord-$DISCORD_VERSION.deb
+
+    echo "Discord version $DISCORD_VERSION installed successfully."
+
+    # Launch Discord
+    discord &
+fi
