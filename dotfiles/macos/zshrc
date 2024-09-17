@@ -76,23 +76,27 @@ fi
 
 ## run-script ##
 runscript() {
-    if [[ $# -eq 0 ]]; then
-        echo "Usage: run-script <scriptname>"
+    if [[ $# -lt 1 ]]; then
+        echo "Usage: runscript <scriptname> [args...]"
         return 1
     fi
 
     local script_name="$1"
     local script_url="https://github.com/Im-Fran/Im-Fran/raw/main/dotfiles/scripts/${script_name}"
 
+    # Shift arguments to pass the remaining ones to the script
+    shift
+
     if command -v curl &>/dev/null; then
-        curl -fsSL "${script_url}" | zsh
+        curl -fsSL "${script_url}" | zsh -s "$@"
     elif command -v wget &>/dev/null; then
-        wget -qO - "${script_url}" | zsh
+        wget -qO - "${script_url}" | zsh -s "$@"
     else
         echo "Error: Neither 'curl' nor 'wget' is available to fetch the script."
         return 1
     fi
 }
+
 
 ## copilot cli ##
 command -v github-copilot-cli >/dev/null 2>&1 && eval "$(github-copilot-cli alias -- "$0")"
