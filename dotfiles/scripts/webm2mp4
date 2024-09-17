@@ -13,6 +13,13 @@ if [[ -z "$1" ]]; then
 fi
 
 input_file="$1"
+
+# Ensure input_file ends with .webm
+if [[ "$input_file" != *.webm ]]; then
+    echo "Error: Input file must be a .webm file."
+    exit 1
+fi
+
 output_file="${input_file%.webm}.mp4"
 
 # Check if the input file exists
