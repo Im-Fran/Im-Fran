@@ -44,7 +44,7 @@ if [ -f "/usr/local/bin/brew" ]; then # macOS
     eval "$(/usr/local/bin/brew shellenv)"
 fi
 
-DEVELOPMENT_DIR="/Volumes/Development"
+DEVELOPMENT_DIR="$HOME/Development"
 COREPACK_HOME="$DEVELOPMENT_DIR/.node/corepack"
 
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/.local/bin:$PATH"
