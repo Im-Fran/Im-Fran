@@ -1,34 +1,10 @@
 #!/bin/bash
 
-if [ ! -d /Volumes/Development ]; then
-  echo "Please make sure to create the 'Development' volume!"
-  exit 1
+DEVELOPMENT_FOLDER="$HOME/Development"
+if [ ! -d "$DEVELOPMENT_FOLDER" ]; then
+  mkdir "$DEVELOPMENT_FOLDER"
 fi
 
-# Move all other files to development volume and create symlinks
-[ -d $HOME/.nvm ] && [ ! -L $HOME/.nvm ] && mv $HOME/.nvm /Volumes/Development/.nvm && ln -s /Volumes/Development/.nvm $HOME/.nvm
-[ ! -d $HOME/.nvm ] && mkdir /Volumes/Development/.nvm && ln -s /Volumes/Development/.nvm $HOME/.nvm
-
-[ -d $HOME/.yarn ] && [ ! -L $HOME/.yarn ] && mv $HOME/.yarn /Volumes/Development/.yarn && ln -s /Volumes/Development/.yarn $HOME/.yarn
-[ ! -d $HOME/.yarn ] && mkdir /Volumes/Development/.yarn && ln -s /Volumes/Development/.yarn $HOME/.yarn
-
-[ -d $HOME/.npm ] && [ ! -L $HOME/.npm ] && mv $HOME/.npm /Volumes/Development/.npm && ln -s /Volumes/Development/.npm $HOME/.npm
-[ ! -d $HOME/.npm ] && mkdir /Volumes/Development/.npm && ln -s /Volumes/Development/.npm $HOME/.npm
-
-[ -d $HOME/.m2 ] && [ ! -L $HOME/.m2 ] && mv $HOME/.m2 /Volumes/Development/.m2 && ln -s /Volumes/Development/.m2 $HOME/.m2
-[ ! -d $HOME/.m2 ] && mkdir /Volumes/Development/.m2 && ln -s /Volumes/Development/.m2 $HOME/.m2
-
-[ -d $HOME/.docker ] && [ ! -L $HOME/.docker ] && mv $HOME/.docker /Volumes/Development/.docker && ln -s /Volumes/Development/.docker $HOME/.docker
-[ ! -d $HOME/.docker ] && mkdir /Volumes/Development/.docker && ln -s /Volumes/Development/.docker $HOME/.docker
-
-[ -d $HOME/.gradle ] && [ ! -L $HOME/.gradle ] && mv $HOME/.gradle /Volumes/Development/.gradle && ln -s /Volumes/Development/.gradle $HOME/.gradle
-[ ! -d $HOME/.gradle ] && mkdir /Volumes/Development/.gradle && ln -s /Volumes/Development/.gradle $HOME/.gradle
-
-[ -d $HOME/.config ] && [ ! -L $HOME/.config ] && mv $HOME/.config /Volumes/Development/.config && ln -s /Volumes/Development/.config $HOME/.config
-[ ! -d $HOME/.config ] && mkdir /Volumes/Development/.config && ln -s /Volumes/Development/.config $HOME/.config
-
-[ -d $HOME/.cargo ] && [ ! -L $HOME/.cargo ] && mv $HOME/.cargo /Volumes/Development/.cargo && ln -s /Volumes/Development/.cargo $HOME/.cargo
-[ ! -d $HOME/.cargo ] && mkdir /Volumes/Development/.cargo && ln -s /Volumes/Development/.cargo $HOME/.cargo
 
 # Setup programs
 if ! command -v brew &> /dev/null; then
@@ -59,11 +35,11 @@ fi
 [ ! -d $HOME/Development ] && ln -s /Volumes/Development $HOME/Development
 
 # Create scripts folder and symlink
-[ ! -d $HOME/.scripts ] &&mkdir /Volumes/Development/.scripts && ln -s /Volumes/Development/.scripts $HOME/.scripts
+[ ! -d $HOME/.scripts ] && mkdir $HOME/.scripts
 
 # Setup swift autocompletion
-swift package completion-tool generate-bash-script > /Volumes/Development/.scripts/swift-completion-tool
-chmod +x /Volumes/Development/.scripts/swift-completion-tool
+swift package completion-tool generate-bash-script > $HOME/.scripts/swift-completion-tool
+chmod +x $HOME/.scripts/swift-completion-tool
 
 # Move the current ~/.zshrc file to a backup if it exists (to ~/.zshrc.bak)
 [ -f $HOME/.zshrc ] && mv $HOME/.zshrc $HOME/.zshrc-$(date +%Y%m%d).bak
