@@ -39,13 +39,12 @@ if [ -d "$HOME/.cargo/env" ]; then
   . "$HOME/.cargo/env"
 fi
 
-## brew ##
-if [ -f "/usr/local/bin/brew" ]; then # macOS
-    eval "$(/usr/local/bin/brew shellenv)"
+# Load homebrew
+if [[ $(uname -p) == "arm" ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+else 
+  eval "$(/usr/local/bin/brew shellenv)"
 fi
-
-DEVELOPMENT_DIR="$HOME/Development"
-COREPACK_HOME="$DEVELOPMENT_DIR/.node/corepack"
 
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/.local/bin:$PATH"
 
