@@ -1,37 +1,49 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-# Check if the necessary commands are present
+# Set JD-GUI directory
+JDGUI_DIR="$HOME/.jdgui"
+mkdir -p "$JDGUI_DIR"
+
+# Check if necessary commands are present
 if ! command -v java > /dev/null; then
-  echo "Error: java command not found. Please install Java and try again."
-  exit 1
+    echo "Error: 'java' command not found. Please install Java and try again."
+    exit 1
 fi
 
 if ! command -v jq > /dev/null; then
-  echo "Error: jq command not found. Please install jq and try again."
-  exit 1
+    echo "Error: 'jq' command not found. Please install jq and try again."
+    exit 1
 fi
 
 if ! command -v curl > /dev/null; then
-  echo "Error: curl command not found. Please install curl and try again."
-  exit 1
+    echo "Error: 'curl' command not found. Please install curl and try again."
+    exit 1
 fi
 
-# Check if the folder ~/.jdgui exists
-if [ ! -d ~/.jdgui ]; then
-  mkdir -p ~/.jdgui
-fi
-
-# Get latest release information from Github API
+# Fetch latest release information
 LATESTDATA=$(curl -fsSL https://api.github.com/repos/java-decompiler/jd-gui/releases/latest | jq '.assets[0]')
 
-# Get filename and download URL from release information
-FILENAME=$(echo $LATESTDATA | jq -r '.name')
-DOWNLOAD_URL=$(echo $LATESTDATA | jq -r '.browser_download_url')
-
-# Download file if it doesn't exist in the target folder
-if [ ! -f ~/.jdgui/"$FILENAME" ]; then
-  curl -s -L "$DOWNLOAD_URL" -o ~/.jdgui/"$FILENAME"
+# Validate LATESTDATA
+if [ -z "$LATESTDATA" ] || [ "$LATESTDATA" = "null" ]; then
+    echo "Error: Failed to fetch release information from GitHub API."
+    exit 1
 fi
 
-# Run JD-GUI with the downloaded JAR file
-java -jar ~/.jdgui/"$FILENAME" & disown
+# Extract filename and download URL
+FILENAME=$(echo "$LATESTDATA" | jq -r '.name')
+DOWNLOAD_URL=$(echo "$LATESTDATA" | jq -r '.browser_download_url')
+
+# Check if the JAR file already exists
+if [ ! -f "$JDGUI_DIR/$FILENAME" ]; then
+    echo "Downloading JD-GUI JAR file..."
+    if ! curl -s -L "$DOWNLOAD_URL" -o "$JDGUI_DIR/$FILENAME"; then
+        echo "Error: Failed to download JD-GUI JAR file."
+        exit 1
+    fi
+else
+    echo "Using existing JD-GUI file: $JDGUI_DIR/$FILENAME"
+fi
+
+# Run JD-GUI with specified working directory
+echo "Starting JD-GUI with working directory: $JDGUI_DIR"
+java -Duser.dir="$JDGUI_DIR" -jar "$JDGUI_DIR/$FILENAME" & disown
