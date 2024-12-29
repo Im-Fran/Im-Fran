@@ -46,4 +46,5 @@ fi
 
 # Run JD-GUI with specified working directory
 echo "Starting JD-GUI with working directory: $JDGUI_DIR"
-java -Duser.dir="$JDGUI_DIR" -jar "$JDGUI_DIR/$FILENAME" & disown
+export XDG_CONFIG_HOME="$JDGUI_DIR"
+java -Dos.name="linux" -jar "$JDGUI_DIR/$FILENAME" & disown
