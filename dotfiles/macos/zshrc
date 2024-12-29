@@ -74,7 +74,7 @@ if [ -f ".phpver" ] && [ -z "$NO_PHPENV" ]; then
 fi
 
 ## run-script ##
-runscript() {
+runscript () {
     if [[ $# -lt 1 ]]; then
         echo "Usage: runscript <scriptname> [args...]"
         return 1
@@ -82,18 +82,52 @@ runscript() {
 
     local script_name="$1"
     local script_url="https://github.com/Im-Fran/Im-Fran/raw/main/dotfiles/scripts/${script_name}"
+    local cache_dir="$HOME/.cache/runscript"
+    local local_script="$cache_dir/$script_name"
 
-    # Shift arguments to pass the remaining ones to the script
-    shift
+    mkdir -p "$cache_dir"
 
-    if command -v curl &>/dev/null; then
-        curl -fsSL "${script_url}" | zsh -s "$@"
-    elif command -v wget &>/dev/null; then
-        wget -qO - "${script_url}" | zsh -s "$@"
+    # Function to calculate MD5 hash
+    calculate_md5() {
+        if command -v md5sum &> /dev/null; then
+            md5sum | awk '{print $1}'
+        elif command -v md5 &> /dev/null; then
+            md5
+        else
+            echo "Error: No MD5 utility available."
+            return 1
+        fi
+    }
+
+    # Check and update the script if needed
+    if [ -f "$local_script" ]; then
+        echo "Checking for updates to $script_name..."
+        # Fetch remote script MD5
+        remote_md5=$(curl -fsSL "$script_url" | calculate_md5)
+        if [ $? -ne 0 ]; then
+            echo "Error: Failed to fetch remote script MD5."
+            return 1
+        fi
+
+        # Calculate local script MD5
+        local_md5=$(cat "$local_script" | calculate_md5)
+        if [ "$remote_md5" != "$local_md5" ]; then
+            echo "Updating script: $script_name"
+            curl -fsSL "$script_url" -o "$local_script" || { echo "Error: Failed to update the script."; return 1; }
+        else
+            echo "Script $script_name is up to date."
+        fi
     else
-        echo "Error: Neither 'curl' nor 'wget' is available to fetch the script."
-        return 1
+        echo "Downloading script: $script_name"
+        curl -fsSL "$script_url" -o "$local_script" || { echo "Error: Failed to fetch the script."; return 1; }
     fi
+
+    # Ensure the script is executable
+    chmod +x "$local_script"
+
+    # Execute the script
+    shift
+    zsh "$local_script" "$@"
 }
 
 
