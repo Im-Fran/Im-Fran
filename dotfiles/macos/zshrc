@@ -156,7 +156,7 @@ update_zshrc() {
 
     # Descargar el contenido remoto y guardarlo en una variable
     local remote_zshrc_content
-    remote_zshrc_content=$(curl -s "$url")
+    remote_zshrc_content=$(curl -sH 'Cache-Control: no-cache "$url")
 
     # Si el contenido está vacío o hay un error, no hacer nada
     if [[ -z "$remote_zshrc_content" ]]; then
