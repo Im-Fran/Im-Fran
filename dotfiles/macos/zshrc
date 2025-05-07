@@ -145,45 +145,38 @@ alias profilezsh='zshrcProfile() { export ZSH_PROFILE=true; exec zsh }; zshrcPro
 
 # Functions
 update_zshrc() {
-    # Check if there is an internet connection before proceeding
+    # Verificar si hay conexión a internet
     if ! nc -zw1 google.com 443 >/dev/null 2>&1; then
         echo "Error: No network connection available. Stopping ZSHRC Update." >&2
         return 1
     fi
 
-    # Define the URL for the remote .zshrc content
+    # URL del archivo remoto .zshrc
     local url="https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/macos/zshrc"
-    
-    # Fetch the remote content and store it in a variable
+
+    # Descargar el contenido remoto y guardarlo en una variable
     local remote_zshrc_content
-    remote_zshrc_content=$(curl -s -w "%{http_code}" -o /tmp/zshrc_temp "$url")
-    
-    # Extract the HTTP status code from the curl response
-    local http_status="${remote_zshrc_content: -3}"
+    remote_zshrc_content=$(curl -s "$url")
 
-    # Check if the HTTP status is 200 (OK)
-    if [[ "$http_status" -eq 200 ]]; then
-        # Remove the last 3 characters (HTTP status code) from the fetched content using sed
-        remote_zshrc_content=$(echo "$remote_zshrc_content" | sed 's/...$//')
-
-        # Read the local .zshrc file's MD5 hash
-        local local_md5 remote_md5
-        local_md5=$(md5 -q "$HOME/.zshrc")
-
-        # Calculate the MD5 hash of the fetched remote content
-        remote_md5=$(echo "$remote_zshrc_content" | md5 -q)
-
-        # If the hashes are different, replace the local .zshrc with the remote content
-        if [[ "$local_md5" != "$remote_md5" ]]; then
-            echo "$remote_zshrc_content" > "$HOME/.zshrc"
-            echo "Updated .zshrc file successfully."
-        else
-            echo ".zshrc is already up to date."
-        fi
-    else
-        # If the response was not 200, display an error message
-        echo "Failed to fetch the remote .zshrc. HTTP Status: $http_status" >&2
+    # Si el contenido está vacío o hay un error, no hacer nada
+    if [[ -z "$remote_zshrc_content" ]]; then
+        echo "Error: Remote content is empty or could not be fetched. Skipping update."
         return 1
+    fi
+
+    # Leer el hash MD5 del archivo local .zshrc
+    local local_md5 remote_md5
+    local_md5=$(md5 -q "$HOME/.zshrc")
+
+    # Calcular el hash MD5 del contenido remoto descargado
+    remote_md5=$(echo "$remote_zshrc_content" | md5 -q)
+
+    # Si los hashes son diferentes, reemplazar el contenido local
+    if [[ "$local_md5" != "$remote_md5" ]]; then
+        echo "$remote_zshrc_content" > "$HOME/.zshrc"
+        echo "Updated .zshrc file successfully."
+    else
+        echo ".zshrc is already up to date."
     fi
 }
 
