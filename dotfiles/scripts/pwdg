@@ -133,15 +133,11 @@ tr_set=""
 # specials: . , - _ { } * + ! " # $ % & / ( ) [ ] ; : @
 specials_raw='.,-_{}*+!"#$%&/()[];:@'
 if $use_specials; then
-  prepend=""
-  append=""
-  for c in $(printf '%s' "$specials_raw" | fold -w1); do
-    case "$c" in
-      -|']') prepend="${prepend}${c}" ;;
-      *) append="${append}${c}" ;;
-    esac
-  done
-  tr_set="${prepend}${tr_set}${append}"
+  # Remove '-' temporarily so we can safely place it at the end
+  specials_no_dash="${specials_raw//-/}"
+  tr_set="${tr_set}${specials_no_dash}"
+  # Append '-' last so BSD tr treats it literally and not as an option/range
+  tr_set="${tr_set}-"
 fi
 
 if [[ -z "$tr_set" ]]; then
