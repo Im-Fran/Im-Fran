@@ -1,0 +1,160 @@
+#!/usr/bin/env zsh
+# pwdg - Password generator using openssl
+#
+# Usage:
+#   pwdg -d 14 -a -s -u -l
+#
+# Options:
+#   -d N     : password length (default 14)
+#   -a [bool]: include digits (default true)
+#   -s [bool]: include special characters (default false)
+#   -u [bool]: include uppercase letters (default true)
+#   -l [bool]: include lowercase letters (default true)
+#
+# Boolean flags:
+#   - Passing without a value means "true" (e.g., -s).
+#   - You can also do -s=false, -a=0, -u=yes, etc.
+
+set -euo pipefail
+
+print_help() {
+  cat <<EOF
+pwdg - Password generator (openssl)
+
+Usage: pwdg [-d N] [-a[=bool]] [-s[=bool]] [-u[=bool]] [-l[=bool]]
+
+-d N    Length (default 14)
+-a      Include digits (default true)
+-s      Include special characters (default false)
+-u      Include uppercase letters (default true)
+-l      Include lowercase letters (default true)
+
+Examples:
+  pwdg -d 16 -s          # 16 chars, include specials
+  pwdg -d 12 -a=false -u # 12 chars, no digits, include uppercase
+EOF
+}
+
+# helper: normalize boolean-like values
+parse_bool() {
+  local val="$1"
+  if [[ -z "$val" ]]; then
+    return 0  # empty -> true
+  fi
+  case "${val:l}" in
+    1|y|yes|true|on) return 0 ;;
+    0|n|no|false|off) return 1 ;;
+    *)
+      echo "Error: invalid boolean value: '$val'" >&2
+      exit 2
+      ;;
+  esac
+}
+
+# defaults
+digits=14
+use_digits=true
+use_specials=false
+use_upper=true
+use_lower=true
+
+# parse args
+while [[ $# -gt 0 ]]; do
+  arg=$1
+  shift
+  case $arg in
+    -h|--help) print_help; exit 0 ;;
+    -d|--digits)
+      [[ $# -gt 0 ]] || { echo "Error: -d requires a value" >&2; exit 2; }
+      digits=$1; shift
+      ;;
+    -d=*) digits="${arg#*=}" ;;
+    -a|--digits)
+      use_digits=true
+      if [[ $# -gt 0 && ! $1 == -* ]]; then
+        parse_bool "$1" && use_digits=true || use_digits=false
+        shift
+      fi
+      ;;
+    -a=*) parse_bool "${arg#*=}" && use_digits=true || use_digits=false ;;
+    -s|--specials)
+      use_specials=true
+      if [[ $# -gt 0 && ! $1 == -* ]]; then
+        parse_bool "$1" && use_specials=true || use_specials=false
+        shift
+      fi
+      ;;
+    -s=*) parse_bool "${arg#*=}" && use_specials=true || use_specials=false ;;
+    -u|--upper)
+      use_upper=true
+      if [[ $# -gt 0 && ! $1 == -* ]]; then
+        parse_bool "$1" && use_upper=true || use_upper=false
+        shift
+      fi
+      ;;
+    -u=*) parse_bool "${arg#*=}" && use_upper=true || use_upper=false ;;
+    -l|--lower)
+      use_lower=true
+      if [[ $# -gt 0 && ! $1 == -* ]]; then
+        parse_bool "$1" && use_lower=true || use_lower=false
+        shift
+      fi
+      ;;
+    -l=*) parse_bool "${arg#*=}" && use_lower=true || use_lower=false ;;
+    *)
+      echo "Unknown option: $arg" >&2
+      print_help
+      exit 2
+      ;;
+  esac
+done
+
+# validations
+if ! [[ "$digits" =~ '^[0-9]+$' ]]; then
+  echo "Error: -d must be a positive integer." >&2
+  exit 2
+fi
+if (( digits <= 0 )); then
+  echo "Error: -d must be greater than 0." >&2
+  exit 2
+fi
+
+if ! $use_specials && ! $use_digits && ! $use_upper && ! $use_lower; then
+  echo "Error: invalid configuration - no character sets enabled." >&2
+  exit 2
+fi
+
+# build character set
+tr_set=""
+[[ $use_lower == true ]]  && tr_set="${tr_set}a-z"
+[[ $use_upper == true ]]  && tr_set="${tr_set}A-Z"
+[[ $use_digits == true ]] && tr_set="${tr_set}0-9"
+
+# specials: . , - _ { } * + ! " # $ % & / ( ) [ ] ; : @
+specials_raw='.,-_{}*+!"#$%&/()[];:@'
+if $use_specials; then
+  prepend=""
+  append=""
+  for c in $(printf '%s' "$specials_raw" | fold -w1); do
+    case "$c" in
+      -|']') prepend="${prepend}${c}" ;;
+      *) append="${append}${c}" ;;
+    esac
+  done
+  tr_set="${prepend}${tr_set}${append}"
+fi
+
+if [[ -z "$tr_set" ]]; then
+  echo "Error: empty character set." >&2
+  exit 2
+fi
+
+# generate
+generated=""
+while [[ ${#generated} -lt $digits ]]; do
+  out=$(openssl rand -base64 64 2>/dev/null | tr -dc "$tr_set" || true)
+  generated="${generated}${out}"
+done
+
+printf '%s\n' "${generated:0:digits}"
+exit 0
