@@ -156,5 +156,5 @@ while [[ ${#generated} -lt $digits ]]; do
   generated="${generated}${out}"
 done
 
-printf '%s\n' "${generated:0:digits}"
+printf '%s\n' "${generated[1,$digits]}"
 exit 0
