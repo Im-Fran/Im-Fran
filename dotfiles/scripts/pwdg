@@ -110,7 +110,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # validations
-if ! [[ "$digits" =~ '^[0-9]+$' ]]; then
+if ! [[ $digits == <-> ]]; then
   echo "Error: -d must be a positive integer." >&2
   exit 2
 fi
