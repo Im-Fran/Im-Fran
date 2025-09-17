@@ -125,32 +125,46 @@ if ! $use_specials && ! $use_digits && ! $use_upper && ! $use_lower; then
 fi
 
 # build character set
-tr_set=""
-[[ $use_lower == true ]]  && tr_set="${tr_set}a-z"
-[[ $use_upper == true ]]  && tr_set="${tr_set}A-Z"
-[[ $use_digits == true ]] && tr_set="${tr_set}0-9"
+charset=""
+[[ $use_lower == true ]]  && charset+=$(printf '%s' "abcdefghijklmnopqrstuvwxyz")
+[[ $use_upper == true ]]  && charset+=$(printf '%s' "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+[[ $use_digits == true ]] && charset+=$(printf '%s' "0123456789")
 
 # specials: . , - _ { } * + ! " # $ % & / ( ) [ ] ; : @
-specials_raw='.,-_{}*+!"#$%&/()[];:@'
+# We append '-' at the end to avoid tr/option confusion; here it's just a plain string.
 if $use_specials; then
-  # Remove '-' temporarily so we can safely place it at the end
-  specials_no_dash="${specials_raw//-/}"
-  tr_set="${tr_set}${specials_no_dash}"
-  # Append '-' last so BSD tr treats it literally and not as an option/range
-  tr_set="${tr_set}-"
+  charset+=$(printf '%s' '.,_{}*+!"#$%&/()[];:@-')
 fi
 
-if [[ -z "$tr_set" ]]; then
+if [[ -z "$charset" ]]; then
   echo "Error: empty character set." >&2
   exit 2
 fi
 
-# generate
-generated=""
-while [[ ${#generated} -lt $digits ]]; do
-  out=$(openssl rand -base64 64 2>/dev/null | tr -dc "$tr_set" || true)
-  generated="${generated}${out}"
+# generate N characters by indexing into charset using random bytes
+#  - Use raw bytes from openssl
+#  - Convert bytes to unsigned decimals
+#  - Mod by charset length to pick a character
+len=${#charset}
+need=$digits
+out=""
+
+# grab a little extra entropy to avoid re-calling openssl in most cases
+bytes_needed=$(( need * 2 ))
+# macOS/BSD od is fine here
+nums=(${(z)$(openssl rand $bytes_needed | od -An -tu1 -v | tr -s '[:space:]' ' ')})
+i=1
+while [[ ${#out} -lt $need ]]; do
+  if (( i > ${#nums} )); then
+    # top up if we run out
+    nums=(${(z)$(openssl rand $bytes_needed | od -An -tu1 -v | tr -s '[:space:]' ' ')})
+    i=1
+  fi
+  byte=${nums[i]}
+  i=$(( i + 1 ))
+  idx=$(( (byte % len) + 1 ))      # 1-based for zsh slicing
+  out+="${charset[$idx,$idx]}"
 done
 
-printf '%s\n' "${generated[1,$digits]}"
+printf '%s\n' "${out[1,$digits]}"
 exit 0
