@@ -157,11 +157,11 @@ update_zshrc() {
     fi
 
     # URL del archivo remoto .zshrc
-    local url="https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/macos/zshrc"
+    local url="https://api.github.com/repos/Im-Fran/Im-Fran/contents/dotfiles/macos/zshrc"
 
     # Descargar el contenido remoto y guardarlo en una variable
     local remote_zshrc_content
-    remote_zshrc_content=$(curl -sH 'Cache-Control: no-cache' "$url")
+    remote_zshrc_content=$(curl -fsSL $url --header "Authorization: Bearer $GITHUB_TOKEN" --header "X-GitHub-Api-Version: 2022-11-28" --header "Cache-Control: no-cache" | jq -r .content | base64 --decode)
 
     # Si el contenido está vacío o hay un error, no hacer nada
     if [[ -z "$remote_zshrc_content" ]]; then
