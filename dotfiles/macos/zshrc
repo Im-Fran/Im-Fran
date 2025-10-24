@@ -5,6 +5,11 @@ if [[ -n "$ZSH_PROFILE" ]]; then
   zmodload zsh/zprof
 fi
 
+# Load environment variables
+if [ -f "$HOME/.env" ]; then
+    source $HOME/.env
+fi
+
 # Load PATH
 export PATH="/usr/local/bin/:/usr/local/sbin:$HOME/Library/Python/3.9/bin:$HOME/.config/composer/vendor/bin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$HOME/.local/share/JetBrains/Toolbox/scripts:/Applications/Docker.app/Contents/Resources/bin/:$PATH"
 
@@ -188,11 +193,6 @@ update_zshrc &!
 # Load swift completion tool
 if [ -f "$HOME/.scripts/swift-completion-tool" ]; then
     source $HOME/.scripts/swift-completion-tool
-fi
-
-# Load environment variables
-if [ -f "$HOME/.env" ]; then
-    source $HOME/.env
 fi
 
 # Stop profiling
