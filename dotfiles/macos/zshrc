@@ -105,7 +105,7 @@ runscript () {
 
         shift
         zsh "$local_script" "$@"
-    elif [ "$HAS_CONNECTION" == "false" && ! -f "$localscript" ]
+    elif [ "$HAS_CONNECTION" == "false" && ! -f "$localscript" ]; then
         echo "There's no internet connection and couldn't find a local copy of the script."
         return 1
     else
@@ -127,7 +127,7 @@ runscript () {
         if [ -f "$local_script" ]; then
             echo "Checking for updates to $script_name..."
             # Fetch remote script MD5
-            remote_md5=$(curl -fsSL -H "Cache-Control: no-cache" "$script_url" | calculate_md5)
+            remote_md5=$(echo $remote_script_content | calculate_md5)
             if [ $? -ne 0 ]; then
                 echo "Error: Failed to fetch remote script MD5."
                 return 1
@@ -137,13 +137,13 @@ runscript () {
             local_md5=$(cat "$local_script" | calculate_md5)
             if [ "$remote_md5" != "$local_md5" ]; then
                 echo "Updating script: $script_name"
-                curl -fsSL -H "Cache-Control: no-cache" "$script_url" -o "$local_script" || { echo "Error: Failed to update the script."; return 1; }
+                echo $remote_script_content >> $local_script || { echo "Error: Failed to save the script."; return 1; }
             else
                 echo "Script $script_name is up to date."
             fi
         else
             echo "Downloading script: $script_name"
-            curl -fsSL -H "Cache-Control: no-cache" "$script_url" -o "$local_script" || { echo "Error: Failed to fetch the script."; return 1; }
+            echo $remote_script_content >> $local_script || { echo "Error: Failed to save the script."; return 1; }
         fi
 
         # Ensure the script is executable
