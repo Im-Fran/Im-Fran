@@ -99,13 +99,13 @@ runscript () {
 
     mkdir -p "$cache_dir"
 
-    if [ "$HAS_CONNECTION" == "false" && -f "$local_script" ]; then
+    if [[ "$HAS_CONNECTION" == "false" && -f "$local_script" ]]; then
         echo "There's no internet connection to check for updates. Using local script..."
         chmod +x "$local_script" # Ensure script is executable
 
         shift
         zsh "$local_script" "$@"
-    elif [ "$HAS_CONNECTION" == "false" && ! -f "$localscript" ]; then
+    elif [[ "$HAS_CONNECTION" == "false" && ! -f "$localscript" ]]; then
         echo "There's no internet connection and couldn't find a local copy of the script."
         return 1
     else
