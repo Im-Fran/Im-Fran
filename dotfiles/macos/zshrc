@@ -211,9 +211,7 @@ update_zshrc() {
     # Si los hashes son diferentes, reemplazar el contenido local
     if [[ "$local_md5" != "$remote_md5" ]]; then
         echo "$remote_zshrc_content" > "$HOME/.zshrc"
-        echo "Updated .zshrc file successfully."
-    else
-        echo ".zshrc is already up to date."
+        osascript -e 'display notification "Updated .zshrc file successfully." with title ".zshrc"'
     fi
 }
 
