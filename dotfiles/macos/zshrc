@@ -137,13 +137,13 @@ runscript () {
             local_md5=$(cat "$local_script" | calculate_md5)
             if [ "$remote_md5" != "$local_md5" ]; then
                 echo "Updating script: $script_name"
-                echo $remote_script_content >> $local_script || { echo "Error: Failed to save the script."; return 1; }
+                echo $remote_script_content > $local_script || { echo "Error: Failed to save the script."; return 1; }
             else
                 echo "Script $script_name is up to date."
             fi
         else
             echo "Downloading script: $script_name"
-            echo $remote_script_content >> $local_script || { echo "Error: Failed to save the script."; return 1; }
+            echo $remote_script_content > $local_script || { echo "Error: Failed to save the script."; return 1; }
         fi
 
         # Ensure the script is executable
