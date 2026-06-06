@@ -135,12 +135,21 @@ COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
 
 plugins=("git gradle flutter")
 # Load OhMyZSH Plugins
+_plugins_cache="$_DOTFILES_STATE_DIR/ohmyzsh/plugins"
 if [[ "$HAS_GITHUB_CONNECTION" == "true" && -n "$GITHUB_TOKEN" ]]; then
-    plugins=("${(s: :)$(curl -fsSL "https://api.github.com/repos/Im-Fran/Im-Fran/contents/dotfiles/shared/ohmyzsh/plugins" \
+    _fetched_plugins=$(curl -fsSL "https://api.github.com/repos/Im-Fran/Im-Fran/contents/dotfiles/shared/ohmyzsh/plugins" \
         --header "Authorization: Bearer $GITHUB_TOKEN" \
         --header "X-GitHub-Api-Version: 2022-11-28" \
-        --header "Cache-Control: no-cache" | jq -r .content | base64 --decode)}")
+        --header "Cache-Control: no-cache" | jq -r .content | base64 --decode)
+    if [[ -n "$_fetched_plugins" ]]; then
+        mkdir -p "$(dirname "$_plugins_cache")"
+        echo "$_fetched_plugins" > "$_plugins_cache"
+        plugins=("${(s: :)$_fetched_plugins}")
+    fi
+elif [[ -f "$_plugins_cache" ]]; then
+    plugins=("${(s: :)$(cat "$_plugins_cache")}")
 fi
+unset _plugins_cache _fetched_plugins
 
 # Load OhMyZSH
 source $ZSH/oh-my-zsh.sh
