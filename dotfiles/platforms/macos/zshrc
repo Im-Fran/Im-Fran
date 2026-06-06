@@ -144,7 +144,7 @@ if [[ "$HAS_GITHUB_CONNECTION" == "true" && -n "$GITHUB_TOKEN" ]]; then
     if [[ -n "$_fetched_plugins" ]]; then
         mkdir -p "$(dirname "$_plugins_cache")"
         echo "$_fetched_plugins" > "$_plugins_cache"
-        plugins=("${(s: :)$_fetched_plugins}")
+        plugins=("${(s: :)_fetched_plugins}")
     fi
 elif [[ -f "$_plugins_cache" ]]; then
     plugins=("${(s: :)$(cat "$_plugins_cache")}")
