@@ -1,0 +1,58 @@
+name: Generate Hashes
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '.hashes.json'
+
+jobs:
+  generate-hashes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate SHA-512 hashes for all dotfiles
+        run: |
+          python3 - <<'EOF'
+          import json
+          import hashlib
+          import os
+          from datetime import datetime, timezone
+
+          files = {}
+          for root, dirs, filenames in os.walk('dotfiles'):
+              dirs.sort()
+              for filename in sorted(filenames):
+                  filepath = os.path.join(root, filename)
+                  with open(filepath, 'rb') as f:
+                      sha512 = hashlib.sha512(f.read()).hexdigest()
+                  files[filepath] = sha512
+
+          result = {
+              'generated_at': datetime.now(timezone.utc).isoformat(),
+              'commit': os.environ.get('GITHUB_SHA', 'unknown'),
+              'files': files
+          }
+
+          with open('.hashes.json', 'w') as f:
+              json.dump(result, f, indent=2)
+              f.write('\n')
+
+          print(f'Generated SHA-512 hashes for {len(files)} files')
+          EOF
+
+      - name: Commit and push .hashes.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .hashes.json
+          if git diff --staged --quiet; then
+            echo "No changes to .hashes.json"
+          else
+            git commit -m "chore: update .hashes.json [skip ci]"
+            git push
+          fi

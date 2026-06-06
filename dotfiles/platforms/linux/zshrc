@@ -1,0 +1,406 @@
+# Start of .zshrc file
+
+# Load PATH
+export PATH="/usr/local/bin:/usr/local/sbin:$HOME/.local/bin:$HOME/.config/composer/vendor/bin:$HOME/.local/share/JetBrains/Toolbox/scripts:$PATH"
+
+# Verify Internet Connection
+export HAS_CONNECTION="false"
+export HAS_GITHUB_CONNECTION="false"
+if nc -zw1 google.com 443 &>/dev/null 2>&1; then
+    export HAS_CONNECTION="true"
+    if nc -zw1 api.github.com 443 &>/dev/null 2>&1; then
+        export HAS_GITHUB_CONNECTION="true"
+    fi
+fi
+
+# Dotfile integrity state
+export DOTFILE_COMPROMISED="false"
+_DOTFILES_STATE_DIR="$HOME/.config/dotfiles"
+
+_dotfiles_get_state() { local f="$_DOTFILES_STATE_DIR/$1"; [[ -f "$f" ]] && cat "$f" || echo ""; }
+_dotfiles_set_state() { mkdir -p "$_DOTFILES_STATE_DIR"; echo "$2" > "$_DOTFILES_STATE_DIR/$1"; }
+_dotfiles_clear_state() { rm -f "$_DOTFILES_STATE_DIR/$1"; }
+
+_notify_linux() {
+    local title="$1" message="$2"
+    if command -v notify-send &>/dev/null; then
+        notify-send "$title" "$message"
+    fi
+}
+
+_apply_zshrc_update_linux() {
+    local repo_path="dotfiles/platforms/linux/zshrc"
+    local url="https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/${repo_path}"
+    local content
+    content=$(curl -fsSL "$url")
+    if [[ -n "$content" ]]; then
+        echo "$content" > "$HOME/.zshrc"
+        local new_hash
+        new_hash=$(sha512sum "$HOME/.zshrc" | awk '{print $1}')
+        _dotfiles_set_state "zshrc_hash" "$new_hash"
+        _dotfiles_clear_state "zshrc_pending_update"
+        _dotfiles_clear_state "zshrc_update_next"
+        _notify_linux "Dotfiles" ".zshrc actualizado correctamente."
+        echo "✅ .zshrc actualizado correctamente."
+    fi
+}
+
+# Check for pending notifications from previous background integrity check
+_check_pending_dotfile_notifications() {
+    [[ -o interactive ]] || return 0
+
+    # Tampering check
+    if [[ -f "$_DOTFILES_STATE_DIR/zshrc_compromised" ]]; then
+        export DOTFILE_COMPROMISED="true"
+        echo ""
+        echo "⚠️  ALERTA: ~/.zshrc fue modificado sin pasar por el repositorio oficial."
+        echo "   Funciones que dependen de GitHub están bloqueadas."
+        echo "   Para restaurar ejecuta: restore_dotfile zshrc"
+        echo ""
+        return 0
+    fi
+
+    # Update notification
+    [[ -f "$_DOTFILES_STATE_DIR/zshrc_pending_update" ]] || return 0
+
+    # Check silence
+    local silence_until
+    silence_until=$(_dotfiles_get_state "zshrc_silence_until")
+    if [[ -n "$silence_until" && $(date +%s) -lt $silence_until ]]; then
+        return 0
+    fi
+    [[ -n "$silence_until" ]] && _dotfiles_clear_state "zshrc_silence_until"
+
+    # Auto-apply if "next start" was chosen
+    if [[ -f "$_DOTFILES_STATE_DIR/zshrc_update_next" ]]; then
+        _dotfiles_clear_state "zshrc_update_next"
+        _dotfiles_clear_state "zshrc_pending_update"
+        _apply_zshrc_update_linux
+        return 0
+    fi
+
+    echo ""
+    echo "📦 Nueva versión de .zshrc disponible. ¿Qué deseas hacer?"
+    echo "   [1] Actualizar ahora (por defecto)"
+    echo "   [2] Al siguiente inicio"
+    echo "   [3] Omitir por ahora"
+    echo ""
+    local choice
+    read -t 15 "choice?Elige una opción [1]: " || choice="1"
+    choice="${choice:-1}"
+
+    case "$choice" in
+        2)
+            _dotfiles_set_state "zshrc_update_next" "1"
+            echo "Se actualizará en el próximo inicio de sesión."
+            ;;
+        3)
+            echo ""
+            echo "¿Por cuánto tiempo silenciar?"
+            echo "   [1] 1h  [2] 3h  [3] 9h  [4] 12h"
+            local s
+            read -t 10 "s?Elige [1]: " || s="1"
+            s="${s:-1}"
+            local h
+            case "$s" in 2) h=3 ;; 3) h=9 ;; 4) h=12 ;; *) h=1 ;; esac
+            _dotfiles_set_state "zshrc_silence_until" "$(( $(date +%s) + h * 3600 ))"
+            echo "Notificaciones silenciadas por ${h}h."
+            ;;
+        *)
+            _dotfiles_clear_state "zshrc_pending_update"
+            _apply_zshrc_update_linux
+            ;;
+    esac
+}
+_check_pending_dotfile_notifications
+
+# Init ohmyzsh
+export ZSH="$HOME/.oh-my-zsh"
+
+# OhMyZSH Theme
+ZSH_THEME="powerlevel10k/powerlevel10k"
+
+# OhMyZSH Auto Updater
+zstyle ':omz:update' mode auto
+zstyle ':omz:update' frequency 3
+
+# Set waiting for completions message
+COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
+
+# Load OhMyZSH Plugins
+plugins=("git gradle flutter")
+if [[ "$HAS_GITHUB_CONNECTION" == "true" ]]; then
+    plugins=("${(s: :)$(curl -fsSL "https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/shared/ohmyzsh/plugins")}")
+fi
+
+# Load OhMyZSH
+source $ZSH/oh-my-zsh.sh
+
+# Variables
+LANG="en_US.UTF-8"
+LC_ALL="$LANG"
+GNUPGHOME="$HOME/.gnupg"
+GPG_TTY=$(tty)
+
+# Load other packages
+## cargo ##
+if [ -d "$HOME/.cargo/env" ]; then
+  . "$HOME/.cargo/env"
+fi
+
+## brew ##
+if [ -f "/home/linuxbrew/.linuxbrew/bin/brew" ]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
+## setup directories ##
+if [[ "$(uname -r)" =~ "microsoft" ]]; then # WSL
+    DEVELOPMENT_DIR="/home/fran/Development"
+    COREPACK_HOME="$HOME/.node/corepack"
+elif [[ "$(uname)" =~ "Linux" ]]; then
+    DEVELOPMENT_DIR="/home/fran/Development"
+    COREPACK_HOME="$HOME/.node/corepack"
+else
+    DEVELOPMENT_DIR="$HOME/Development"
+    COREPACK_HOME="$HOME/.node/corepack"
+    echo "Unknown System! Please add '$(uname)' to dotfiles."
+fi
+
+export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
+
+## phpver ##
+if [ -f ".phpver" ] && [ -z "$NO_PHPENV" ]; then
+    PHPVER=$(cat .phpver)
+    BREW_PHP_VERSIONS_CHECK=$(brew list --versions | grep "php.*$PHPVER")
+    if ! [ "$BREW_PHP_VERSIONS_CHECK" = "" ]; then
+        echo "Loading php..."
+        brew unlink php > /dev/null 2>&1
+        if [ "$PHPVER" = "8.2" ]; then
+            brew link php@8.2 --force > /dev/null 2>&1
+            echo "Loaded PHP v8.2"
+        elif [ "$PHPVER" = "8.1" ]; then
+            brew link php@8.1 --force > /dev/null 2>&1
+            echo "Loaded PHP v8.1"
+        elif [ "$PHPVER" = "8.0" ]; then
+            brew link php@8.0 --force > /dev/null 2>&1
+            echo "Loaded PHP v8.0"
+        elif [ "$PHPVER" = "7.4" ]; then
+            brew link php@7.4 --force > /dev/null 2>&1
+            echo "Loaded PHP v7.4"
+        fi
+    fi
+fi
+
+## run-script ##
+runscript() {
+    if [[ "$DOTFILE_COMPROMISED" == "true" ]]; then
+        echo "🚫 BLOQUEADO: ~/.zshrc fue modificado sin autorización."
+        echo "   Ejecuta: restore_dotfile zshrc"
+        return 1
+    fi
+
+    if [[ $# -lt 1 ]]; then
+        echo "Usage: runscript <scriptname> [args...]"
+        return 1
+    fi
+
+    local script_name="$1"
+    local cache_dir="$HOME/.cache/runscript"
+    local local_script="$cache_dir/$script_name"
+
+    mkdir -p "$cache_dir"
+
+    # Try platform-specific first, fallback to shared
+    local platform_url="https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/platforms/linux/scripts/${script_name}"
+    local shared_url="https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/shared/scripts/${script_name}"
+
+    if [[ "$HAS_GITHUB_CONNECTION" == "false" ]]; then
+        if [[ -f "$local_script" ]]; then
+            echo "No hay conexión a GitHub. Usando copia local..."
+            chmod +x "$local_script"
+            shift
+            zsh "$local_script" "$@"
+            return $?
+        else
+            echo "No hay conexión a GitHub y no existe copia local del script."
+            return 1
+        fi
+    fi
+
+    local remote_script_content
+    local http_status
+    http_status=$(curl -o /dev/null -sL -w "%{http_code}" "$platform_url")
+    if [[ "$http_status" == "200" ]]; then
+        remote_script_content=$(curl -fsSL "$platform_url")
+    else
+        remote_script_content=$(curl -fsSL "$shared_url")
+    fi
+
+    if [[ -z "$remote_script_content" ]]; then
+        echo "Error: Script '$script_name' no encontrado en plataforma ni en compartidos."
+        return 1
+    fi
+
+    local remote_hash
+    remote_hash=$(echo "$remote_script_content" | sha512sum | awk '{print $1}')
+
+    if [[ -f "$local_script" ]]; then
+        local local_hash
+        local_hash=$(sha512sum "$local_script" | awk '{print $1}')
+        if [[ "$remote_hash" != "$local_hash" ]]; then
+            echo "Actualizando script: $script_name"
+            echo "$remote_script_content" > "$local_script" || { echo "Error: No se pudo guardar el script."; return 1; }
+        fi
+    else
+        echo "Descargando script: $script_name"
+        echo "$remote_script_content" > "$local_script" || { echo "Error: No se pudo guardar el script."; return 1; }
+    fi
+
+    chmod +x "$local_script"
+    shift
+    zsh "$local_script" "$@"
+}
+
+## copilot cli ##
+command -v github-copilot-cli >/dev/null 2>&1 && eval "$(github-copilot-cli alias -- "$0")"
+
+# Setup aliases
+alias zshconfig="nano ~/.zshrc"
+alias yarnconfig="nano ~/.yarnrc"
+alias nvimrc="nano ~/.config/nvim/init.vim"
+alias sail="[ -f sail ] && sh sail || sh vendor/bin/sail"
+alias delete-old-cached-branches="git fetch origin --prune"
+alias run-script='runscript'
+
+# Functions
+transfer(){ if [ $# -eq 0 ];then echo "No arguments specified.\nUsage:\n transfer <file|directory>\n ... | transfer <file_name>">&2;return 1;fi;if tty -s;then file="$1";file_name=$(basename "$file");if [ ! -e "$file" ];then echo "$file: No such file or directory">&2;return 1;fi;if [ -d "$file" ];then file_name="$file_name.zip";(cd "$file"&&zip -r -q - .)|curl --progress-bar --upload-file "-" "https://transfer.sh/$file_name"|tee /dev/null;else cat "$file"|curl --progress-bar --upload-file "-" "https://transfer.sh/$file_name"|tee /dev/null;fi;else file_name=$1;curl --progress-bar --upload-file "-" "https://transfer.sh/$file_name"|tee /dev/null;fi;}
+
+restore_dotfile() {
+    local name="$1"
+    if [[ -z "$name" ]]; then
+        echo "Usage: restore_dotfile <name>"
+        echo "Disponibles: zshrc"
+        return 1
+    fi
+
+    local repo_path local_path
+    case "$name" in
+        zshrc)
+            repo_path="dotfiles/platforms/linux/zshrc"
+            local_path="$HOME/.zshrc"
+            ;;
+        *)
+            echo "Dotfile desconocido: $name"
+            return 1
+            ;;
+    esac
+
+    if [[ "$HAS_GITHUB_CONNECTION" == "false" ]]; then
+        echo "Error: No hay conexión a GitHub para restaurar."
+        return 1
+    fi
+
+    echo "Descargando $name desde el repositorio oficial..."
+    local content
+    content=$(curl -fsSL "https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/${repo_path}")
+
+    if [[ -z "$content" ]]; then
+        echo "Error: No se pudo descargar el archivo."
+        return 1
+    fi
+
+    # Verify hash against .hashes.json
+    local hashes_json
+    hashes_json=$(curl -fsSL "https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/.hashes.json")
+
+    if [[ -n "$hashes_json" ]]; then
+        local expected_hash actual_hash
+        expected_hash=$(echo "$hashes_json" | jq -r ".files[\"${repo_path}\"]" 2>/dev/null)
+        actual_hash=$(echo "$content" | sha512sum | awk '{print $1}')
+
+        if [[ -n "$expected_hash" && "$expected_hash" != "null" && "$expected_hash" != "$actual_hash" ]]; then
+            echo "⚠️  El hash del archivo descargado no coincide con .hashes.json."
+            echo "   Abortando la restauración por integridad."
+            return 1
+        fi
+    fi
+
+    echo "$content" > "$local_path"
+    local final_hash
+    final_hash=$(sha512sum "$local_path" | awk '{print $1}')
+    _dotfiles_set_state "${name}_hash" "$final_hash"
+    _dotfiles_clear_state "${name}_compromised"
+    _dotfiles_clear_state "${name}_pending_update"
+    _dotfiles_clear_state "${name}_update_next"
+    export DOTFILE_COMPROMISED="false"
+    echo "✅ $name restaurado correctamente."
+    _notify_linux "Dotfiles" "$name restaurado desde el repositorio oficial."
+}
+
+# Background integrity check
+_check_dotfile_updates() {
+    [[ "$HAS_GITHUB_CONNECTION" == "false" ]] && return 1
+
+    local repo_path="dotfiles/platforms/linux/zshrc"
+    mkdir -p "$_DOTFILES_STATE_DIR"
+
+    # Respect silence setting
+    local silence_until
+    silence_until=$(_dotfiles_get_state "zshrc_silence_until")
+    if [[ -n "$silence_until" && $(date +%s) -lt $silence_until ]]; then
+        return 0
+    fi
+
+    local local_hash
+    local_hash=$(sha512sum "$HOME/.zshrc" | awk '{print $1}')
+
+    local last_applied_hash
+    last_applied_hash=$(_dotfiles_get_state "zshrc_hash")
+    if [[ -z "$last_applied_hash" ]]; then
+        _dotfiles_set_state "zshrc_hash" "$local_hash"
+        last_applied_hash="$local_hash"
+    fi
+
+    local hashes_json
+    hashes_json=$(curl -fsSL "https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/.hashes.json")
+    [[ -z "$hashes_json" ]] && return 1
+
+    local remote_expected_hash
+    remote_expected_hash=$(echo "$hashes_json" | jq -r ".files[\"${repo_path}\"]" 2>/dev/null)
+    [[ -z "$remote_expected_hash" || "$remote_expected_hash" == "null" ]] && return 1
+
+    # Caso A: todo sincronizado
+    if [[ "$local_hash" == "$remote_expected_hash" ]]; then
+        _dotfiles_set_state "zshrc_hash" "$local_hash"
+        return 0
+    fi
+
+    # Caso D: el usuario sincronizó manualmente
+    if [[ "$local_hash" != "$last_applied_hash" && "$local_hash" == "$remote_expected_hash" ]]; then
+        _dotfiles_set_state "zshrc_hash" "$local_hash"
+        return 0
+    fi
+
+    # Caso C: tampering — local cambió pero no coincide con remoto
+    if [[ "$local_hash" != "$last_applied_hash" && "$local_hash" != "$remote_expected_hash" ]]; then
+        _dotfiles_set_state "zshrc_compromised" "1"
+        _notify_linux "Dotfiles - Alerta de Seguridad" "⚠️ ~/.zshrc fue modificado sin autorización. Ejecuta: restore_dotfile zshrc"
+        return 0
+    fi
+
+    # Caso B: actualización disponible
+    _dotfiles_set_state "zshrc_pending_update" "1"
+}
+_check_dotfile_updates &!
+
+# Load other utils
+
+# Load swift completion tool
+if [ -f "$HOME/.scripts/swift-completion-tool" ]; then
+    source $HOME/.scripts/swift-completion-tool
+fi
+
+# Load environment variables
+if [ -f "$HOME/.env" ]; then
+    source $HOME/.env
+fi
