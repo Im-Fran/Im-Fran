@@ -239,9 +239,9 @@ runscript() {
     local shared_url="https://api.github.com/repos/Im-Fran/Im-Fran/contents/dotfiles/shared/scripts/${script_name}"
 
     local remote_script_content
-    remote_script_content=$(curl -fsSL "$platform_url" "${headers[@]}" | jq -r 'if .content then .content else empty end' 2>/dev/null | base64 --decode 2>/dev/null)
+    remote_script_content=$(curl -fsSL "$platform_url" "${headers[@]}" 2>/dev/null | jq -r 'if .content then .content else empty end' 2>/dev/null | base64 --decode 2>/dev/null)
     if [[ -z "$remote_script_content" ]]; then
-        remote_script_content=$(curl -fsSL "$shared_url" "${headers[@]}" | jq -r 'if .content then .content else empty end' 2>/dev/null | base64 --decode 2>/dev/null)
+        remote_script_content=$(curl -fsSL "$shared_url" "${headers[@]}" 2>/dev/null | jq -r 'if .content then .content else empty end' 2>/dev/null | base64 --decode 2>/dev/null)
     fi
 
     if [[ -z "$remote_script_content" ]]; then
