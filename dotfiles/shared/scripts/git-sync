@@ -1,0 +1,95 @@
+#!/usr/bin/env zsh
+# git-sync - Synchronize current branch with a base branch
+#
+# Usage:
+#   git-sync [-b <branch>]
+#
+# Options:
+#   -b <branch> : base branch to sync from (default: dev)
+#   -h          : show this help
+
+print_help() {
+  cat <<EOF
+git-sync - Synchronize current branch with a base branch
+
+Usage: git-sync [-b <branch>]
+
+  -b <branch>   Base branch to sync from (default: dev)
+  -h            Show this help
+
+Examples:
+  git-sync              # sync current branch with dev
+  git-sync -b main      # sync current branch with main
+EOF
+}
+
+# --- dependency check ---
+if ! command -v git &>/dev/null; then
+  echo "Error: 'git' is not installed or not in PATH." >&2
+  exit 1
+fi
+
+# --- arg parsing ---
+base_branch="dev"
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -h|--help) print_help; exit 0 ;;
+    -b|--branch)
+      [[ $# -gt 1 ]] || { echo "Error: -b requires a branch name." >&2; exit 2; }
+      base_branch=$2; shift ;;
+    -b=*|--branch=*) base_branch="${1#*=}" ;;
+    *) echo "Error: unknown option '$1'." >&2; print_help; exit 2 ;;
+  esac
+  shift
+done
+
+# --- repo check ---
+if ! git rev-parse --git-dir &>/dev/null; then
+  echo "Error: not inside a git repository." >&2
+  exit 1
+fi
+
+# --- verify base branch exists ---
+if ! git show-ref --verify --quiet "refs/heads/$base_branch"; then
+  echo "Error: base branch '$base_branch' does not exist locally." >&2
+  exit 1
+fi
+
+# --- uncommitted changes check ---
+if ! git diff --quiet || ! git diff --cached --quiet; then
+  echo "Error: you have uncommitted changes. Commit or stash them before syncing." >&2
+  exit 1
+fi
+
+# --- sync ---
+current=$(git rev-parse --abbrev-ref HEAD)
+echo "Current branch: $current"
+
+if [[ "$current" == "$base_branch" ]]; then
+  echo "Already on '$base_branch'. Pulling latest changes..."
+  git pull origin "$base_branch" || { echo "Error: pull from '$base_branch' failed." >&2; exit 1; }
+  echo "Done."
+  exit 0
+fi
+
+echo "Switching to '$base_branch'..."
+git checkout "$base_branch" || { echo "Error: could not switch to '$base_branch'." >&2; exit 1; }
+
+echo "Pulling latest '$base_branch'..."
+if ! git pull origin "$base_branch"; then
+  echo "Error: pull from '$base_branch' failed. Switching back to '$current'." >&2
+  git checkout "$current"
+  exit 1
+fi
+
+echo "Switching back to '$current'..."
+git checkout "$current" || { echo "Error: could not switch back to '$current'." >&2; exit 1; }
+
+echo "Merging '$base_branch' into '$current'..."
+if ! git merge "$base_branch"; then
+  echo "Error: merge conflicts detected. Resolve them and run 'git merge --continue'." >&2
+  exit 1
+fi
+
+echo "Synced '$current' with '$base_branch'."
