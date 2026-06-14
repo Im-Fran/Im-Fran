@@ -3,6 +3,9 @@
 # Load PATH
 export PATH="/usr/local/bin:/usr/local/sbin:$HOME/.local/bin:$HOME/.config/composer/vendor/bin:$HOME/.local/share/JetBrains/Toolbox/scripts:$PATH"
 
+# Load environment variables early (GITHUB_TOKEN is needed by update functions below)
+[[ -f "$HOME/.dotfiles/env" ]] && source "$HOME/.dotfiles/env"
+
 # Verify Internet Connection
 export HAS_CONNECTION="false"
 export HAS_GITHUB_CONNECTION="false"
@@ -264,14 +267,6 @@ runscript() {
 ## copilot cli ##
 command -v github-copilot-cli >/dev/null 2>&1 && eval "$(github-copilot-cli alias -- "$0")"
 
-# Setup aliases
-alias zshconfig="nano ~/.zshrc"
-alias yarnconfig="nano ~/.yarnrc"
-alias nvimrc="nano ~/.config/nvim/init.vim"
-alias sail="[ -f sail ] && sh sail || sh vendor/bin/sail"
-alias delete-old-cached-branches="git fetch origin --prune"
-alias run-script='runscript'
-
 # Functions
 transfer(){ if [ $# -eq 0 ];then echo "No arguments specified.\nUsage:\n transfer <file|directory>\n ... | transfer <file_name>">&2;return 1;fi;if tty -s;then file="$1";file_name=$(basename "$file");if [ ! -e "$file" ];then echo "$file: No such file or directory">&2;return 1;fi;if [ -d "$file" ];then file_name="$file_name.zip";(cd "$file"&&zip -r -q - .)|curl --progress-bar --upload-file "-" "https://transfer.sh/$file_name"|tee /dev/null;else cat "$file"|curl --progress-bar --upload-file "-" "https://transfer.sh/$file_name"|tee /dev/null;fi;else file_name=$1;curl --progress-bar --upload-file "-" "https://transfer.sh/$file_name"|tee /dev/null;fi;}
 
@@ -400,7 +395,10 @@ if [ -f "$HOME/.scripts/swift-completion-tool" ]; then
     source $HOME/.scripts/swift-completion-tool
 fi
 
-# Load environment variables
-if [ -f "$HOME/.env" ]; then
-    source $HOME/.env
-fi
+# Load personal dotfiles
+_dotfiles_home="$HOME/.dotfiles"
+[[ -f "$_dotfiles_home/aliases" ]]     && source "$_dotfiles_home/aliases"
+[[ -f "$_dotfiles_home/functions" ]]   && source "$_dotfiles_home/functions"
+[[ -f "$_dotfiles_home/tools" ]]       && source "$_dotfiles_home/tools"
+[[ -f "$_dotfiles_home/completions" ]] && source "$_dotfiles_home/completions"
+unset _dotfiles_home
