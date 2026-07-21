@@ -60,7 +60,7 @@ done < <(git branch --format='%(refname:short)')
 is_protected() {
   local b="$1"
   for p in "${PROTECTED_BRANCHES[@]}"; do
-    [ "$b" == "$p" ] && return 0
+    [ "$b" = "$p" ] && return 0
   done
   return 1
 }
@@ -68,7 +68,7 @@ is_protected() {
 is_merged_ref() {
   local b="$1"
   for r in "${MERGED_REFS[@]}"; do
-    [ "$b" == "$r" ] && return 0
+    [ "$b" = "$r" ] && return 0
   done
   return 1
 }
@@ -76,7 +76,7 @@ is_merged_ref() {
 TO_DELETE=()
 
 for branch in "${LOCAL_BRANCHES[@]}"; do
-  if [ "$branch" == "$CURRENT_BRANCH" ]; then
+  if [ "$branch" = "$CURRENT_BRANCH" ]; then
     continue
   fi
   if is_protected "$branch"; then
