@@ -37,7 +37,10 @@ command -v gh >/dev/null 2>&1 || { echo "Error: gh (GitHub CLI) is not installed
 command -v jq >/dev/null 2>&1 || { echo "Error: jq is not installed or not on PATH."; exit 1; }
 
 echo "Fetching merged PRs from GitHub..."
-mapfile -t MERGED_REFS < <(gh pr list --state merged --limit 500 --json headRefName -q '.[].headRefName')
+MERGED_REFS=()
+while IFS= read -r line; do
+  [ -n "$line" ] && MERGED_REFS+=("$line")
+done < <(gh pr list --state merged --limit 500 --json headRefName -q '.[].headRefName')
 
 if [ "${#MERGED_REFS[@]}" -eq 0 ]; then
   echo "No merged PRs found (or gh returned nothing). Nothing to do."
@@ -49,7 +52,10 @@ echo "Found ${#MERGED_REFS[@]} merged PR branch names."
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
 # Local branches only (no "remotes/origin/..." entries)
-mapfile -t LOCAL_BRANCHES < <(git branch --format='%(refname:short)')
+LOCAL_BRANCHES=()
+while IFS= read -r line; do
+  [ -n "$line" ] && LOCAL_BRANCHES+=("$line")
+done < <(git branch --format='%(refname:short)')
 
 is_protected() {
   local b="$1"
