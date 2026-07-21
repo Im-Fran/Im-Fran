@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+#
+# clean-merged-branches.sh
+#
+# Finds local branches that correspond to a merged GitHub PR (via `gh pr list`)
+# and deletes them locally. Never touches remote branches.
+#
+# Usage:
+#   ./clean-merged-branches.sh            # dry run (default) - just shows what would be deleted
+#   ./clean-merged-branches.sh --force    # actually deletes the branches
+#   ./clean-merged-branches.sh --force -D # actually deletes, using -D (force) instead of -d (safe)
+#
+# Requirements: gh (GitHub CLI, authenticated), git, jq
+
+set -euo pipefail
+
+# Branches that should never be deleted, even if a merged PR matches them
+PROTECTED_BRANCHES=("dev" "prod" "main" "master")
+
+DRY_RUN=true
+DELETE_FLAG="-d"   # safe delete by default; refuses to delete branches with unmerged commits
+
+for arg in "$@"; do
+  case "$arg" in
+    --force) DRY_RUN=false ;;
+    -D) DELETE_FLAG="-D" ;;
+    -h|--help)
+      echo "Usage: $0 [--force] [-D]"
+      echo "  --force   actually delete branches (default is dry-run)"
+      echo "  -D        use 'git branch -D' instead of the default safe 'git branch -d'"
+      exit 0
+      ;;
+  esac
+done
+
+command -v gh >/dev/null 2>&1 || { echo "Error: gh (GitHub CLI) is not installed or not on PATH."; exit 1; }
+command -v jq >/dev/null 2>&1 || { echo "Error: jq is not installed or not on PATH."; exit 1; }
+
+echo "Fetching merged PRs from GitHub..."
+mapfile -t MERGED_REFS < <(gh pr list --state merged --limit 500 --json headRefName -q '.[].headRefName')
+
+if [ "${#MERGED_REFS[@]}" -eq 0 ]; then
+  echo "No merged PRs found (or gh returned nothing). Nothing to do."
+  exit 0
+fi
+
+echo "Found ${#MERGED_REFS[@]} merged PR branch names."
+
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+# Local branches only (no "remotes/origin/..." entries)
+mapfile -t LOCAL_BRANCHES < <(git branch --format='%(refname:short)')
+
+is_protected() {
+  local b="$1"
+  for p in "${PROTECTED_BRANCHES[@]}"; do
+    [ "$b" == "$p" ] && return 0
+  done
+  return 1
+}
+
+is_merged_ref() {
+  local b="$1"
+  for r in "${MERGED_REFS[@]}"; do
+    [ "$b" == "$r" ] && return 0
+  done
+  return 1
+}
+
+TO_DELETE=()
+
+for branch in "${LOCAL_BRANCHES[@]}"; do
+  if [ "$branch" == "$CURRENT_BRANCH" ]; then
+    continue
+  fi
+  if is_protected "$branch"; then
+    continue
+  fi
+  if is_merged_ref "$branch"; then
+    TO_DELETE+=("$branch")
+  fi
+done
+
+if [ "${#TO_DELETE[@]}" -eq 0 ]; then
+  echo "No local branches match a merged PR. Nothing to clean up."
+  exit 0
+fi
+
+echo ""
+echo "Local branches matching merged PRs:"
+for b in "${TO_DELETE[@]}"; do
+  echo "  - $b"
+done
+echo ""
+
+if $DRY_RUN; then
+  echo "Dry run only — no branches were deleted."
+  echo "Re-run with --force to actually delete them (add -D if 'git branch -d' refuses due to unmerged commits)."
+else
+  for b in "${TO_DELETE[@]}"; do
+    echo "Deleting $b ..."
+    git branch "$DELETE_FLAG" "$b"
+  done
+  echo "Done."
+fi
