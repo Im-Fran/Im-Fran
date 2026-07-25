@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+#
+# launchagents-manager
+#
+# Syncs LaunchAgent .plist files between ~/Library/LaunchAgents and this
+# dotfiles repo, and (re)installs them as symlinks.
+#
+# The set of tracked plists is explicit, listed in manifest.txt (one
+# filename per line, # for comments) next to this repo's launchagents dir.
+#
+# Usage:
+#   runscript launchagents-manager sync   # copy from ~/Library/LaunchAgents into the repo
+#   runscript launchagents-manager link   # symlink from the repo into ~/Library/LaunchAgents and load
+
+set -uo pipefail
+
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/.dotfiles}"
+REPO_LAUNCHAGENTS_DIR="$DOTFILES_DIR/dotfiles/platforms/macos/launchagents"
+MANIFEST="$REPO_LAUNCHAGENTS_DIR/manifest.txt"
+SYSTEM_LAUNCHAGENTS_DIR="$HOME/Library/LaunchAgents"
+
+usage() {
+    echo "Usage: $0 <sync|link>"
+    exit 1
+}
+
+[[ $# -ge 1 ]] || usage
+ACTION="$1"
+
+[[ -f "$MANIFEST" ]] || { echo "Error: manifest not found at $MANIFEST"; exit 1; }
+
+read_manifest() {
+    grep -vE '^\s*(#|$)' "$MANIFEST"
+}
+
+cmd_sync() {
+    mkdir -p "$REPO_LAUNCHAGENTS_DIR"
+    while IFS= read -r name; do
+        local src="$SYSTEM_LAUNCHAGENTS_DIR/$name"
+        if [[ -f "$src" ]]; then
+            cp "$src" "$REPO_LAUNCHAGENTS_DIR/$name"
+            echo "Synced: $name"
+        else
+            echo "Skipped (not found in $SYSTEM_LAUNCHAGENTS_DIR): $name"
+        fi
+    done < <(read_manifest)
+    echo "Done. Review and commit changes in $REPO_LAUNCHAGENTS_DIR."
+}
+
+cmd_link() {
+    mkdir -p "$SYSTEM_LAUNCHAGENTS_DIR"
+    local uid
+    uid=$(id -u)
+    while IFS= read -r name; do
+        local src="$REPO_LAUNCHAGENTS_DIR/$name"
+        local dest="$SYSTEM_LAUNCHAGENTS_DIR/$name"
+        if [[ ! -f "$src" ]]; then
+            echo "Skipped (not found in $REPO_LAUNCHAGENTS_DIR): $name"
+            continue
+        fi
+        launchctl bootout "gui/$uid/${name%.plist}" >/dev/null 2>&1
+        ln -sf "$src" "$dest"
+        if launchctl bootstrap "gui/$uid" "$dest" 2>/dev/null; then
+            echo "Linked and loaded: $name"
+        else
+            echo "Linked: $name (load failed, check plist syntax with: launchctl bootstrap gui/$uid $dest)"
+        fi
+    done < <(read_manifest)
+}
+
+case "$ACTION" in
+    sync) cmd_sync ;;
+    link) cmd_link ;;
+    *) usage ;;
+esac
