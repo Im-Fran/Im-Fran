@@ -2,9 +2,9 @@ name: Generate Hashes
 
 on:
   push:
-    branches: [main]
+    branches: [dev]
     paths-ignore:
-      - '.hashes.json'
+      - ".hashes.json"
 
 jobs:
   generate-hashes:

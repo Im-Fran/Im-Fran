@@ -15,10 +15,10 @@ if ! command -v brew &> /dev/null; then
 fi
 
 # Install brew taps
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/shared/brew/taps.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Im-Fran/Im-Fran/dev/dotfiles/shared/brew/taps.sh)"
 
 # Install brew packages
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/shared/brew/packages.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Im-Fran/Im-Fran/dev/dotfiles/shared/brew/packages.sh)"
 
 # Install oh my zsh
 if [ ! -d $HOME/.oh-my-zsh ]; then
@@ -38,7 +38,7 @@ chmod +x $HOME/.scripts/swift-completion-tool
 [ -f ~/.zshrc ] && mv ~/.zshrc ~/.zshrc-$(date +%Y%m%d).bak
 
 # Generate new ~/.zshrc file
-curl -o ~/.zshrc https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/platforms/linux/zshrc
+curl -o ~/.zshrc https://raw.githubusercontent.com/Im-Fran/Im-Fran/dev/dotfiles/platforms/linux/zshrc
 
 # Load current zshrc
 source ~/.zshrc

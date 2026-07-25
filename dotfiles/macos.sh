@@ -18,7 +18,7 @@ else
 fi
 
 # Install brew taps
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/shared/brew/taps.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Im-Fran/Im-Fran/dev/dotfiles/shared/brew/taps.sh)"
 
 if [ ! -d $HOME/.oh-my-zsh ]; then
   export RUNZSH="no"
@@ -42,7 +42,7 @@ chmod +x $HOME/.scripts/swift-completion-tool
 [ -f $HOME/.zshrc ] && mv $HOME/.zshrc $HOME/.zshrc-$(date +%Y%m%d).bak
 
 # Generate new ~/.zshrc file
-curl -o $HOME/.zshrc https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/platforms/macos/zshrc
+curl -o $HOME/.zshrc https://raw.githubusercontent.com/Im-Fran/Im-Fran/dev/dotfiles/platforms/macos/zshrc
 
 # Load current zshrc
 source $HOME/.zshrc

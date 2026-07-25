@@ -33,7 +33,7 @@ _notify_linux() {
 
 _apply_zshrc_update_linux() {
     local repo_path="dotfiles/platforms/linux/zshrc"
-    local url="https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/${repo_path}"
+    local url="https://raw.githubusercontent.com/Im-Fran/Im-Fran/dev/${repo_path}"
     local content
     content=$(curl -fsSL "$url")
     if [[ -n "$content" ]]; then
@@ -133,7 +133,7 @@ COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
 # Load OhMyZSH Plugins
 plugins=("git gradle flutter")
 if [[ "$HAS_GITHUB_CONNECTION" == "true" ]]; then
-    plugins=("${(s: :)$(curl -fsSL "https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/shared/ohmyzsh/plugins")}")
+    plugins=("${(s: :)$(curl -fsSL "https://raw.githubusercontent.com/Im-Fran/Im-Fran/dev/dotfiles/shared/ohmyzsh/plugins")}")
 fi
 
 # Load OhMyZSH
@@ -214,8 +214,8 @@ runscript() {
     mkdir -p "$cache_dir"
 
     # Try platform-specific first, fallback to shared
-    local platform_url="https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/platforms/linux/scripts/${script_name}"
-    local shared_url="https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/dotfiles/shared/scripts/${script_name}"
+    local platform_url="https://raw.githubusercontent.com/Im-Fran/Im-Fran/dev/dotfiles/platforms/linux/scripts/${script_name}"
+    local shared_url="https://raw.githubusercontent.com/Im-Fran/Im-Fran/dev/dotfiles/shared/scripts/${script_name}"
 
     if [[ "$HAS_GITHUB_CONNECTION" == "false" ]]; then
         if [[ -f "$local_script" ]]; then
@@ -297,7 +297,7 @@ restore_dotfile() {
 
     echo "Descargando $name desde el repositorio oficial..."
     local content
-    content=$(curl -fsSL "https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/${repo_path}")
+    content=$(curl -fsSL "https://raw.githubusercontent.com/Im-Fran/Im-Fran/dev/${repo_path}")
 
     if [[ -z "$content" ]]; then
         echo "Error: No se pudo descargar el archivo."
@@ -306,7 +306,7 @@ restore_dotfile() {
 
     # Verify hash against .hashes.json
     local hashes_json
-    hashes_json=$(curl -fsSL "https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/.hashes.json")
+    hashes_json=$(curl -fsSL "https://raw.githubusercontent.com/Im-Fran/Im-Fran/dev/.hashes.json")
 
     if [[ -n "$hashes_json" ]]; then
         local expected_hash actual_hash
@@ -357,7 +357,7 @@ _check_dotfile_updates() {
     fi
 
     local hashes_json
-    hashes_json=$(curl -fsSL "https://raw.githubusercontent.com/Im-Fran/Im-Fran/main/.hashes.json")
+    hashes_json=$(curl -fsSL "https://raw.githubusercontent.com/Im-Fran/Im-Fran/dev/.hashes.json")
     [[ -z "$hashes_json" ]] && return 1
 
     local remote_expected_hash
