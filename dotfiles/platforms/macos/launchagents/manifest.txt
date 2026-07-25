@@ -1,0 +1,7 @@
+# List of LaunchAgent .plist filenames to track, one per line.
+# Managed via: runscript launchagents-manager sync|link
+#
+# Example:
+# cl.franciscosolis.something.plist
+
+cl.franciscosolis.brew-upgrader.plist

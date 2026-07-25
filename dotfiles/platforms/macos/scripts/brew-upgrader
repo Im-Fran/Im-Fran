@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+#
+# brew-upgrader
+#
+# Non-interactively updates and upgrades all Homebrew formulae and casks.
+# If any package fails to upgrade, prints (and saves) a briefing report with
+# the package name, the error, and a suggested command to fix it manually.
+#
+# Usage: runscript brew-upgrader
+
+set -uo pipefail
+
+command -v brew >/dev/null 2>&1 || { echo "Error: brew is not installed."; exit 1; }
+command -v jq >/dev/null 2>&1 || { echo "Error: jq is not installed."; exit 1; }
+
+echo "Updating Homebrew..."
+brew update
+
+OUTDATED_JSON=$(brew outdated --json=v2 --greedy)
+FORMULAE=$(echo "$OUTDATED_JSON" | jq -r '.formulae[].name')
+CASKS=$(echo "$OUTDATED_JSON" | jq -r '.casks[].name')
+
+FAILURES=()
+
+upgrade_one() {
+    local kind="$1" name="$2" cmd="$3" out
+    echo "Upgrading $kind: $name..."
+    if ! out=$($cmd "$name" 2>&1); then
+        local reason
+        reason=$(echo "$out" | tail -5)
+        local suggestion
+        if [[ "$kind" == "cask" ]]; then
+            suggestion="brew reinstall --cask $name"
+        else
+            suggestion="brew reinstall $name"
+        fi
+        FAILURES+=("$kind|$name|$reason|$suggestion")
+    fi
+}
+
+while IFS= read -r name; do
+    [[ -z "$name" ]] && continue
+    upgrade_one "formula" "$name" "brew upgrade"
+done <<< "$FORMULAE"
+
+while IFS= read -r name; do
+    [[ -z "$name" ]] && continue
+    upgrade_one "cask" "$name" "brew upgrade --cask --greedy"
+done <<< "$CASKS"
+
+if [[ ${#FAILURES[@]} -eq 0 ]]; then
+    echo "All formulae and casks are up to date."
+    exit 0
+fi
+
+REPORT_DIR="$HOME/.cache/runscript"
+mkdir -p "$REPORT_DIR"
+REPORT_FILE="$REPORT_DIR/brew-upgrade-report-$(date +%Y%m%d-%H%M%S).txt"
+
+{
+    echo "brew-upgrader failure report - $(date)"
+    echo ""
+    for entry in "${FAILURES[@]}"; do
+        IFS='|' read -r kind name reason suggestion <<< "$entry"
+        echo "[$kind] $name"
+        echo "  Reason:"
+        echo "$reason" | sed 's/^/    /'
+        echo "  Suggested command: $suggestion"
+        echo ""
+    done
+} | tee "$REPORT_FILE"
+
+echo "Report saved to $REPORT_FILE"
+exit 1
