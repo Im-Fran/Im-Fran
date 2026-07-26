@@ -51,6 +51,15 @@ webm2mp4 <input.webm>
 Convierte un archivo `.webm` a `.mp4` con `ffmpeg` (escala a dimensiones
 pares, 30fps), generando `<input>.mp4` en el mismo directorio.
 
+## `mp4towebm`
+
+```
+mp4towebm <input.mp4>
+```
+
+Convierte un archivo `.mp4` a `.webm` con `ffmpeg` (VP9 + Opus, escala a
+dimensiones pares, 30fps), generando `<input>.webm` en el mismo directorio.
+
 ## `install-flutter`
 
 ```

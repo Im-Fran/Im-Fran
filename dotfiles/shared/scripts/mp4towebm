@@ -1,0 +1,40 @@
+#!/bin/zsh
+
+# Check if ffmpeg is installed
+if ! command -v ffmpeg &>/dev/null; then
+    echo "Error: 'ffmpeg' is not installed. Please install it and try again."
+    exit 1
+fi
+
+# Check if the input file is provided
+if [[ -z "$1" ]]; then
+    echo "Usage: mp4towebm <input_file.mp4>"
+    exit 1
+fi
+
+input_file="$1"
+
+# Ensure input_file ends with .mp4
+if [[ "$input_file" != *.mp4 ]]; then
+    echo "Error: Input file must be a .mp4 file."
+    exit 1
+fi
+
+output_file="${input_file%.mp4}.webm"
+
+# Check if the input file exists
+if [[ ! -f "$input_file" ]]; then
+    echo "Error: Input file '$input_file' not found."
+    exit 1
+fi
+
+# Convert mp4 to webm using ffmpeg
+ffmpeg -i "$input_file" -filter:v "scale=trunc(iw/2)*2:trunc(ih/2)*2,fps=30" -c:v libvpx-vp9 -c:a libopus "$output_file"
+
+# Check if the conversion was successful
+if [[ $? -eq 0 ]]; then
+    echo "Conversion successful: '$output_file'"
+else
+    echo "Error: Conversion failed."
+    exit 1
+fi
