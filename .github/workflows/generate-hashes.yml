@@ -1,7 +1,7 @@
 name: Generate Hashes
 
 on:
-  push:
+  pull_request:
     branches: [dev]
     paths-ignore:
       - ".hashes.json"
@@ -14,6 +14,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: Generate SHA-512 hashes for all dotfiles
         run: |
@@ -45,14 +47,53 @@ jobs:
           print(f'Generated SHA-512 hashes for {len(files)} files')
           EOF
 
-      - name: Commit and push .hashes.json
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .hashes.json
-          if git diff --staged --quiet; then
-            echo "No changes to .hashes.json"
-          else
-            git commit -m "chore: update .hashes.json [skip ci]"
-            git push
-          fi
+      - name: Commit .hashes.json via API (verified)
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const fs = require('fs');
+            const path = '.hashes.json';
+            const branch = process.env.HEAD_REF;
+
+            const newContent = fs.readFileSync(path, 'utf8');
+            const newData = JSON.parse(newContent);
+
+            let existingSha;
+            let existingData;
+            try {
+              const { data } = await github.rest.repos.getContent({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                path,
+                ref: branch,
+              });
+              existingSha = data.sha;
+              existingData = JSON.parse(Buffer.from(data.content, 'base64').toString('utf8'));
+            } catch (err) {
+              if (err.status !== 404) throw err;
+            }
+
+            const filesUnchanged =
+              existingData &&
+              JSON.stringify(existingData.files) === JSON.stringify(newData.files);
+
+            if (filesUnchanged) {
+              core.info('File hashes unchanged, skipping commit');
+              return;
+            }
+
+            const newContentB64 = Buffer.from(newContent).toString('base64');
+
+            await github.rest.repos.createOrUpdateFileContents({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              path,
+              message: 'chore: update .hashes.json',
+              content: newContentB64,
+              sha: existingSha,
+              branch,
+            });
+
+            core.info('Committed updated .hashes.json');
+        env:
+          HEAD_REF: ${{ github.head_ref }}
