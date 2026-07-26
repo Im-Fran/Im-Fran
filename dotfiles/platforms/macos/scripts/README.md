@@ -7,7 +7,9 @@ cae a `dotfiles/shared/scripts/`. En macOS la descarga usa la API de GitHub
 (`api.github.com/repos/.../contents/...`) con `GITHUB_TOKEN`, cachea el
 script en `~/.cache/runscript/` (comparando hash contra la copia remota) y lo
 corre con `zsh`. Sin conexión a GitHub, usa la última copia cacheada si
-existe.
+existe. Sin argumentos, `runscript` lista los scripts disponibles separados
+en "de macOS" y "compartidos" (o los cacheados localmente si no hay
+conexión).
 
 ## `brew-upgrader`
 
