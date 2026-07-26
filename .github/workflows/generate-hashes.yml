@@ -56,10 +56,10 @@ jobs:
             const branch = process.env.HEAD_REF;
 
             const newContent = fs.readFileSync(path, 'utf8');
-            const newContentB64 = Buffer.from(newContent).toString('base64');
+            const newData = JSON.parse(newContent);
 
             let existingSha;
-            let existingContent;
+            let existingData;
             try {
               const { data } = await github.rest.repos.getContent({
                 owner: context.repo.owner,
@@ -68,15 +68,21 @@ jobs:
                 ref: branch,
               });
               existingSha = data.sha;
-              existingContent = Buffer.from(data.content, 'base64').toString('utf8');
+              existingData = JSON.parse(Buffer.from(data.content, 'base64').toString('utf8'));
             } catch (err) {
               if (err.status !== 404) throw err;
             }
 
-            if (existingContent === newContent) {
-              core.info('No changes to .hashes.json');
+            const filesUnchanged =
+              existingData &&
+              JSON.stringify(existingData.files) === JSON.stringify(newData.files);
+
+            if (filesUnchanged) {
+              core.info('File hashes unchanged, skipping commit');
               return;
             }
+
+            const newContentB64 = Buffer.from(newContent).toString('base64');
 
             await github.rest.repos.createOrUpdateFileContents({
               owner: context.repo.owner,
