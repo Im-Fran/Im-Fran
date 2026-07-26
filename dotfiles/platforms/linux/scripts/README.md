@@ -6,7 +6,9 @@ carpeta (`dotfiles/platforms/linux/scripts/`) y si no encuentra el script cae
 a `dotfiles/shared/scripts/`. A diferencia de macOS, en Linux la descarga se
 hace directo desde `raw.githubusercontent.com` (sin `GITHUB_TOKEN`), se
 cachea en `~/.cache/runscript/` y se corre con `zsh`. Sin conexión a GitHub,
-usa la última copia cacheada si existe.
+usa la última copia cacheada si existe. Sin argumentos, `runscript` lista los
+scripts disponibles separados en "de Linux" y "compartidos" (o los cacheados
+localmente si no hay conexión).
 
 ## `update-discord-linux`
 
