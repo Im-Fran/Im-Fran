@@ -14,6 +14,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: Generate SHA-512 hashes for all dotfiles
         run: |
@@ -54,5 +56,5 @@ jobs:
             echo "No changes to .hashes.json"
           else
             git commit -m "chore: update .hashes.json [skip ci]"
-            git push
+            git push origin HEAD:${{ github.head_ref }}
           fi
