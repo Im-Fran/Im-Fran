@@ -3,7 +3,7 @@
 # Load PATH
 export PATH="/usr/local/bin:/usr/local/sbin:$HOME/.local/bin:$HOME/.config/composer/vendor/bin:$HOME/.local/share/JetBrains/Toolbox/scripts:$PATH"
 
-# Load environment variables early (GITHUB_TOKEN is needed by update functions below)
+# Load environment variables early (GITHUB_API_TOKEN is needed by update functions below)
 [[ -f "$HOME/.dotfiles/env" ]] && source "$HOME/.dotfiles/env"
 
 # Verify Internet Connection

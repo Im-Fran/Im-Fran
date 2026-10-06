@@ -15,7 +15,7 @@ if ping -c 1 -W 1 1.1.1.1 >/dev/null 2>&1 || ping -c 1 -W 1 8.8.8.8 >/dev/null 2
     fi
 fi
 
-# Load environment variables early (GITHUB_TOKEN is needed by update functions below)
+# Load environment variables early (GITHUB_API_TOKEN is needed by update functions below)
 [[ -f "$HOME/.dotfiles/env" ]] && source "$HOME/.dotfiles/env"
 
 # Dotfile integrity state
@@ -31,7 +31,7 @@ _apply_zshrc_update() {
     local url="https://api.github.com/repos/Im-Fran/Im-Fran/contents/${repo_path}"
     local content
     content=$(curl -fsSL "$url" \
-        --header "Authorization: Bearer $GITHUB_TOKEN" \
+        --header "Authorization: Bearer $GITHUB_API_TOKEN" \
         --header "X-GitHub-Api-Version: 2022-11-28" \
         --header "Cache-Control: no-cache" | jq -r .content | base64 --decode)
     if [[ -n "$content" ]]; then
@@ -134,9 +134,9 @@ COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
 plugins=("git gradle flutter")
 # Load OhMyZSH Plugins
 _plugins_cache="$_DOTFILES_STATE_DIR/ohmyzsh/plugins"
-if [[ "$HAS_GITHUB_CONNECTION" == "true" && -n "$GITHUB_TOKEN" ]]; then
+if [[ "$HAS_GITHUB_CONNECTION" == "true" && -n "$GITHUB_API_TOKEN" ]]; then
     _fetched_plugins=$(curl -fsSL "https://api.github.com/repos/Im-Fran/Im-Fran/contents/dotfiles/shared/ohmyzsh/plugins" \
-        --header "Authorization: Bearer $GITHUB_TOKEN" \
+        --header "Authorization: Bearer $GITHUB_API_TOKEN" \
         --header "X-GitHub-Api-Version: 2022-11-28" \
         --header "Cache-Control: no-cache" | jq -r .content | base64 --decode)
     if [[ -n "$_fetched_plugins" ]]; then
@@ -202,13 +202,13 @@ runscript() {
         return 1
     fi
 
-    if [[ -z "$GITHUB_TOKEN" ]]; then
-        echo "GITHUB_TOKEN is not set. Make sure to create a token and set it in your .env!"
+    if [[ -z "$GITHUB_API_TOKEN" ]]; then
+        echo "GITHUB_API_TOKEN is not set. Make sure to create a token and set it in your .env!"
         return 1
     fi
 
     local cache_dir="$HOME/.cache/runscript"
-    local headers=(--header "Authorization: Bearer $GITHUB_TOKEN" --header "X-GitHub-Api-Version: 2022-11-28" --header "Cache-Control: no-cache")
+    local headers=(--header "Authorization: Bearer $GITHUB_API_TOKEN" --header "X-GitHub-Api-Version: 2022-11-28" --header "Cache-Control: no-cache")
 
     mkdir -p "$cache_dir"
 
@@ -305,8 +305,8 @@ restore_dotfile() {
         return 1
     fi
 
-    if [[ -z "$GITHUB_TOKEN" ]]; then
-        echo "Error: GITHUB_TOKEN no está configurado."
+    if [[ -z "$GITHUB_API_TOKEN" ]]; then
+        echo "Error: GITHUB_API_TOKEN no está configurado."
         return 1
     fi
 
@@ -314,7 +314,7 @@ restore_dotfile() {
     local url="https://api.github.com/repos/Im-Fran/Im-Fran/contents/${repo_path}"
     local content
     content=$(curl -fsSL "$url" \
-        --header "Authorization: Bearer $GITHUB_TOKEN" \
+        --header "Authorization: Bearer $GITHUB_API_TOKEN" \
         --header "X-GitHub-Api-Version: 2022-11-28" \
         --header "Cache-Control: no-cache" | jq -r .content | base64 --decode)
 
@@ -326,7 +326,7 @@ restore_dotfile() {
     # Verify hash against .hashes.json
     local hashes_json
     hashes_json=$(curl -fsSL "https://api.github.com/repos/Im-Fran/Im-Fran/contents/.hashes.json" \
-        --header "Authorization: Bearer $GITHUB_TOKEN" \
+        --header "Authorization: Bearer $GITHUB_API_TOKEN" \
         --header "X-GitHub-Api-Version: 2022-11-28" \
         --header "Cache-Control: no-cache" | jq -r .content | base64 --decode)
 
@@ -357,7 +357,7 @@ restore_dotfile() {
 # Background integrity check
 _check_dotfile_updates() {
     [[ "$HAS_GITHUB_CONNECTION" == "false" ]] && return 1
-    [[ -z "$GITHUB_TOKEN" ]] && return 1
+    [[ -z "$GITHUB_API_TOKEN" ]] && return 1
 
     local repo_path="dotfiles/platforms/macos/zshrc"
     mkdir -p "$_DOTFILES_STATE_DIR"
@@ -381,7 +381,7 @@ _check_dotfile_updates() {
 
     local hashes_json
     hashes_json=$(curl -fsSL "https://api.github.com/repos/Im-Fran/Im-Fran/contents/.hashes.json" \
-        --header "Authorization: Bearer $GITHUB_TOKEN" \
+        --header "Authorization: Bearer $GITHUB_API_TOKEN" \
         --header "X-GitHub-Api-Version: 2022-11-28" \
         --header "Cache-Control: no-cache" | jq -r .content | base64 --decode)
 

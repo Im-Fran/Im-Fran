@@ -4,7 +4,7 @@ Scripts específicos de macOS, ejecutados vía la función `runscript` definida
 en [`zshrc`](../zshrc). `runscript <nombre> [args...]` busca primero en esta
 carpeta (`dotfiles/platforms/macos/scripts/`) y si no encuentra el script
 cae a `dotfiles/shared/scripts/`. En macOS la descarga usa la API de GitHub
-(`api.github.com/repos/.../contents/...`) con `GITHUB_TOKEN`, cachea el
+(`api.github.com/repos/.../contents/...`) con `GITHUB_API_TOKEN`, cachea el
 script en `~/.cache/runscript/` (comparando hash contra la copia remota) y lo
 corre con `zsh`. Sin conexión a GitHub, usa la última copia cacheada si
 existe. Sin argumentos, `runscript` lista los scripts disponibles separados
